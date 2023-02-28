@@ -126,7 +126,12 @@ def home(request):
     page_number = request.GET.get('page') or 1
     page_obj = paginator.get_page(page_number)
 
-    return  render(request,'core/home.html',{'texto':texto, 'docs':page_obj, 'categories': tipos, 'page_obj': page_obj, 'searchKey': searchKey})
+    div_agregar= []
+    if(len(docs) + 1 % 2 == True):
+        div_agregar.append(range(0))
+    else:
+        div_agregar.append(range(1))
+    return  render(request,'core/home.html',{'div_agregar': div_agregar, 'texto':texto, 'docs':page_obj, 'categories': tipos, 'page_obj': page_obj, 'searchKey': searchKey})
 
 
 def users (request): 

@@ -11,7 +11,7 @@
           <form action="" method="post" role="search">
             {% csrf_token %}
             <div class="class=" d-flex"">
-              <input class="form-control me-2" type="search" name="texto" placeholder="Buscar" aria-label="Search" style="margin-top: 10px; margin-left: 10px; margin-bottom: 5%;"">
+              <input class="form-control me-2" type="search" name="texto" placeholder="Buscar" value="{{texto}}" aria-label="Search" style="margin-top: 10px; margin-left: 10px; margin-bottom: 5%;"">
               <button class="btn btn-outline-success" type="submit" style="margin-left: 10px; margin-bottom: 5%;">Buscar
               </button>
             </div>
@@ -64,6 +64,17 @@
               </div>
               {% endfor %}
               <!Hasta aqui generar>
+              {% for item in div_agregar %}
+              {% for i in item %}
+              <div class="col ">
+                <!Libro 1>
+                  <div class="containerima" style="max-width: 300px; position: relative; margin-top: 4%;"
+                    aria-hidden="true">
+                   
+                 </div>                 
+              </div>
+              {% endfor %}
+              {% endfor %}
           </div>
         </div>
       </form>

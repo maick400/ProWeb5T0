@@ -18,9 +18,8 @@
        
             {% if page_obj.has_next %}
             <a class="btn btn-primary" href="{{ request.get_full_path }}?page={{ page_obj.next_page_number }}">Siguiente</a>
-            <a class="btn btn-primary" href="{{ request.get_full_path }}?page={{ page_obj.paginator.num_pages }}">{{
-                page_obj.paginator.num_pages
-                }}</a>
+            <a class="btn btn-primary" href="{{ request.get_full_path }}?page={{ page_obj.paginator.num_pages }}">
+                {{ page_obj.paginator.num_pages }}</a>
             {% endif %}
         </div>
     </div>

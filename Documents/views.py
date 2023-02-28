@@ -21,57 +21,62 @@ from django.core.paginator import Paginator
 @login_required(login_url='signin' , redirect_field_name = 'documentos')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def index(request):
-    tipos = Tipodocumento.objects.all()
-    if request.method == 'POST':
-        #Obtener los toggle buttons que fueron activados
-        documentosMarcados = request.POST.getlist('activo')           
-        documentosall= Documento.objects.all().filter(usuario=request.user.id)
+    tipos = Tipodocumento.objects.all() 
+    #Home muestra los documentos que fueron establecidos:      
+    docs = Documento.objects.all()
+    docs  = Documento.objects.all().filter(usuario=request.user.id)
+    searchKey = request.POST.get("key", "searchKey")
+    
+    for doc in docs:        
+        if(doc.portada):
+            if(os.path.exists(os.getcwd() + doc.portada.url) == False):
+                doc.portada = doc.idtipodocumento.imagen
+        else:
+            doc.portada = doc.idtipodocumento.imagen
+            
+    texto = request.GET.get('texto')
 
-        #Obtener los documentos que contienen el texto buscado y las categorías seleccionadas
-        documentos = documentosall.filter(titulo__contains = request.POST.get("texto"), idtipodocumento__in = documentosMarcados)
+    documentosMarcados = request.GET.getlist('activo') 
+    for tipo in tipos:
+        tipo.activado = True
 
-        #Verificar que exista la imágen de los documentos, si no existe usar la de la categoría.
-        for doc in documentos:        
-            if(doc.portada):
-                if(os.path.exists(os.getcwd() + doc.portada.url) == False):
-                    doc.portada = doc.idtipodocumento.imagen
-            else:
-                doc.portada = doc.idtipodocumento.imagen       
-
-        tipos.aget_or_create('activado')
+    if documentosMarcados:
         for tipo in tipos:
+            encontrado = False
             for idtipo in documentosMarcados:
                 if  tipo.idtipodocumento == int(idtipo):
-                    tipo.activado = True
-
-        paginator = Paginator(documentos, 5)
-        page_number = request.GET.get('page') or 1
-        page_obj = paginator.get_page(page_number)
-
-
-        return render(request,'documents/index_document.html', {'docSeleccionado': documentosMarcados, 'documentos': page_obj, 'categories': tipos, 'page_obj': page_obj})
-    else:
-        if request.user.type   == 'CRE':
-            documentos = Documento.objects.all().filter(usuario_id = request.user.id);
-        else:  
-            documentos = Documento.objects.all();
-        
-        for doc in documentos:        
-            if(doc.portada):
-                if(os.path.exists(os.getcwd() + doc.portada.url) == False):
-                    doc.portada = doc.idtipodocumento.imagen
-            else:
-                doc.portada = doc.idtipodocumento.imagen       
-                
-        tipos.aget_or_create('activado')
+                    encontrado = True
+            tipo.activado = encontrado            
+    
+    searchKey = request.GET.get("key", "searchKey")
+    if not documentosMarcados:
         for tipo in tipos:
-            tipo.activado = True
-            
-        paginator = Paginator(documentos, 5)
-        page_number = request.GET.get('page') or 1
-        page_obj = paginator.get_page(page_number)
+            documentosMarcados.append(tipo.idtipodocumento)
+    
+    if texto != None:
+        docs = docs.filter(titulo__contains = texto, idtipodocumento__in = documentosMarcados)
+    else:
+        texto = ""
+        docs = docs.filter(titulo__contains = "", idtipodocumento__in = documentosMarcados)
 
-        return render(request,'documents/index_document.html', {'documentos': page_obj, 'categories': tipos, 'page_obj': page_obj})
+    #Verificar que exista la imágen de los documentos, si no existe usar la de la categoría.
+    for doc in docs:
+        if(doc.portada):
+            if(os.path.exists(os.getcwd() + doc.portada.url) == False):
+                doc.portada = doc.idtipodocumento.imagen
+        else:
+            doc.portada = doc.idtipodocumento.imagen 
+
+    paginator = Paginator(docs, 5)
+    page_number = request.GET.get('page') or 1
+    page_obj = paginator.get_page(page_number)
+
+    div_agregar= []
+    if(len(docs) + 1 % 2 == True):
+        div_agregar.append(range(0))
+    else:
+        div_agregar.append(range(1))
+    return  render(request,'core/home.html',{'div_agregar': div_agregar, 'texto':texto, 'docs':page_obj, 'categories': tipos, 'page_obj': page_obj, 'searchKey': searchKey})
 
 
 @login_required
