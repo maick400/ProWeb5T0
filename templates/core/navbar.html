@@ -1,0 +1,150 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary pt-0">
+  <div class="container-fluid mt-0 p-2" style= "background-color: rgb(1, 109, 6) ; ">
+    <a class="navbar-brand" href=" {% url 'home' %} ">Inicio</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+
+        <!-- <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Documentos</a>
+        </li> -->
+
+        {% if  user.type == 'CRE' or user.type == 'ADM'  %}
+        
+          <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Mi documentos
+            </a>
+
+
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'documentos:documentos' %}">Ver</a></li>
+              <li><a class="dropdown-item" href="{% url 'documentos:chooseType' %}" >Subir documento</a></li>
+              <li><hr class="dropdown-divider"></li>
+            </ul>
+          </li>
+        {% endif %}
+        
+
+          {% comment %} --------------Admin----------------- {% endcomment %}
+
+        {% if user.type == 'ADM' %}
+          <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Mantenimiento
+            </a>
+
+
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'documentos:documentos' %}">Categorias</a></li>
+              <li><a class="dropdown-item" href="{% url 'documentos:categories' %}">Formatos de documentos</a></li>
+              <li><a class="dropdown-item" href="{% url 'documentos:categories' %}">Documentos</a></li>
+
+              <li><a class="dropdown-item" href="{% url 'signin' %}" ></a></li>
+              <li><hr class="dropdown-divider"></li>
+            </ul>
+          </li>
+        {% endif %}
+
+
+       
+
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Sesión
+          </a>
+          <ul class="dropdown-menu">
+
+            <li><a class="dropdown-item" href="{% url 'logout' %}">{{user.first_name}}</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar Sesión</a></li>
+            <li><a class="dropdown-item" href="#">Ver perfil</a></li>
+            <li><hr class="dropdown-divider"></li>
+          </ul>
+        </li>
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+<!-- 
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'home' %}" 
+        >Inicio</a
+      >
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          
+          <li class="nav-item2">
+            <a class="nav-link" href="{% url 'documentos:documentos' %}" style="color: #e8e7e7"
+              >Documentos</a{% url 'logout' %}>
+          </li>
+
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Dropdown
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li>
+
+
+
+          <div class="text-end">
+
+          
+
+            {% if user.is_authenticated %}
+            
+          <li class="nav-item">
+            <li class="nav-item2">
+              <a class="nav-link" href="{% url 'logout' %}" style="color: #e8e7e7">Cerrar sesión</a>
+          </li>
+          
+          {% else%}
+            <a class="nav-link" href="{% url 'signin' %}" style="color: #e8e7e7">Inicar Sesion</a>
+          {% endif %}
+
+
+          </div>
+          
+
+            
+          </li>
+
+        </ul>
+        <form class="d-flex">
+          <input
+            class="form-control me-2"
+            type="search"
+            placeholder="Buscar"
+            aria-label="Buscar"
+          />
+        </form>
+      </div>
+    </div>
+  </nav>
+   -->

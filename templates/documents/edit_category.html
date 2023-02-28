@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %} {% load static %} {% block title %}{{title}}{%
+endblock title %} {% block content %}
+
+<div class="container">
+  <div class="row">
+    <form action="" method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+        
+      <div class="col">
+        <label for="id_tipo">Tipo de Documento:</label>
+
+        <input
+          type="text"
+          name="tipo"
+          class="form-control"
+          maxlength="30"
+          id="id_tipo"
+        />
+
+        <label for="id_imagen">Imagen:</label>
+
+        <input
+          type="file"
+          name="imagen"
+          class="form-control"
+          accept="image/*"
+          id="id_imagen"
+        />
+
+        <label for="id_descripcion">Descripción:</label>
+
+        <input
+          type="text"
+          name="descripcion"
+          class="form-control"
+          maxlength="100"
+          id="id_descripcion"
+        />
+
+        <div class="col-12 text-end mt-2">
+          <button type="submit" class="btn btn-success">Crear</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}

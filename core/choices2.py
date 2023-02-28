@@ -1,0 +1,1 @@
+TIPOS_ATRIBUTO = [('text', 'texto'), ('number', 'numerico'), ('date','fecha')]

@@ -1,0 +1,50 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% block content %}
+
+<div class="container mt-2">
+    <a href="{% url 'documentos:chooseType'%}" class="btn btn-success">Agregar</a>
+    <form action="#" class="border p-5 form">
+      <div class="container" style="margin-top: 1%;">
+        <div class="form-group">
+          <label style="margin-top: 2%; font-size: 50px; font-weight: 800;">Libros</label>
+        </div>
+        <div class="row">
+
+          {% for item in documentos %}
+          <div class="col order-last">
+              <div class="containerima" style="max-width: 370px; position: relative; margin-top: 4%;"
+                aria-hidden="true">
+
+                  {% comment %} {% if item.iddocumento == 26 %} {% endcomment %}
+                  <img width="300" height="375"
+                    src="{% static 'img/auditoria-ambiental-julian-rodriguez-angel-alcaide-jose-francisco-castro-patricia-rodriguez-1ra-edicion-250x325.jpg' %} ">
+                  <div class="content " style="width=100%;">
+                  {% comment %} {% endif %} {% endcomment %}
+
+                    <p>
+                      <a class="titulos-libros"  href="/Documentos/details/{{item.iddocumento}}"
+                        style=" color: #dfdfdf;  font-size: 20px; font-weight: 900; ">{{item.titulo}}</a>
+                    </p>
+                    
+
+
+                </div>
+              </div>             
+          </div>
+          
+          {% endfor %}
+
+
+          
+        </div>
+        
+      </div>
+    </form>
+
+    </tbody>
+  </table>
+
+</div>
+
+{% endblock content %}

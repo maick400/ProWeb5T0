@@ -1,0 +1,90 @@
+.navbar{
+    width: 100%;
+    background-color: #1B7505;
+}
+.navbar2{
+    width: 100%;
+    background-color: #dfdfdf;
+}
+
+.bg-text-wrap__text {
+    margin-left: 20px;
+    position: absolute;
+    z-index: -1;
+    display: block;
+    font-size: 90px;
+    font-weight: 800;
+    line-height: 0;
+    text-align: left;
+    color: rgba(0, 0, 0, 0.04);
+    pointer-events: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.widget-title {
+   margin-left: 1.5%;
+    position: relative;
+    font-size: 24px;
+    color: #9baab2;
+    margin-bottom: 18px;
+    padding-left: 14px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    line-height: 2;
+}
+.titulos-libros{
+    text-decoration: none;
+    font-size: 14px;
+    color: #000000;
+}
+
+
+
+.containerima .content{
+    opacity: 0%;
+    background: rgba(0, 0, 0, .7);
+    position: absolute;
+    top: 0%;
+    left: 0;
+    text-align: center;
+    height: 100%;
+    box-sizing: border-box;
+    padding-top: 40%;
+    padding-right: 10%;
+    padding-left: 10%;
+}
+
+.containerima .p{
+    text-align: center;
+    position: absolute;
+    padding-top: 10%;
+    margin-top: 50%;
+    border-bottom: 1px solid #9baab2;
+    padding: 0 10px 20px 10px;
+}
+.containerima
+{
+    width: 100%;
+}
+
+.containerima:hover .content{
+    top: 0;
+    opacity: 100%;
+    width: 100%;
+}
+
+.Footer{
+    margin-top: 1550px;
+    padding: 3%;
+    background-color: #1B7505;
+}
+
+.ver_mas{
+    padding-left: 91%;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 16px;
+    color: #1B7505;
+}
+

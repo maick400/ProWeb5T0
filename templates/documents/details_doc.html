@@ -1,0 +1,114 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+
+ 
+
+
+ <form action="#" class="border p-1 form">
+    <div class="container" style="margin-top: 1%;">
+      <div class="form-group">
+        <label style="margin-top: 2%; font-size: 40px; font-weight: 800;">  {{registro.titulo}}</label>
+      </div>
+      <div class="row">
+        <div class="col order-last" style="margin-left: 5%; margin-top: 2%;">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+
+                        <tr>
+                            <td>Tipo: &nbsp;</td>
+                            <td>{{registro.idtipodocumento.tipo}}</td>
+                        </tr>
+                        
+                       {% for atr in atributos  %}
+                         
+                        <tr>
+                            <td> {{atr.atributo}}&nbsp;</td>
+                            <td>{{atr.valor}}</td>
+                        </tr>
+                       {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+
+        <div class="col order-first" style="margin-bottom: 3%;">
+          <!Libro 1>
+            <div class="containerima" style="max-width: 370px; position: relative; margin-top: 4%;"
+              aria-hidden="true">
+              <img width="300" height="375"
+                src="{{registro.portada.url}}">
+              <div class="content">
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+<div class="container">
+    
+
+    <div class="Resumen">
+        <u>
+            <h3>Resumen</h3>
+        </u>
+        <p>
+            {{registro.resumen}}
+        </p>
+    </div>
+</div>
+
+<div class="container" style="margin-top: 5%;">
+    <div class="panel panel-primary">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Fichero</th>
+                        <th>Descripción</th>
+                        <th>Páginas</th>
+                        <th>Tamaño</th>
+                        <th>Formato</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{registro.ruta.name}}</td>
+                        <td>{{registro.titulo}}</td>
+                        <td>10 pag.</td>
+                        <td>2.56 MB</td>
+                        <td>PDF</td>
+                        <td>
+                            <a class="btn btn-success" target="_blank"
+                                href="/bitstream/123456789/1897/1/RECALDE%20SOLANO%20%20CRISTHIAN%20ANDR%c3%89S.pdf">
+                                Visualizar/Abrir
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="Footer" style="margin-top: 50px;
+padding: 1.5%;
+background-color: #1B7505;"></div>
+
+
+
+{% endblock content %}
+
+
+
+

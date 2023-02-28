@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Mis publicaciones{% endblock title %}
+
+{% block content %}
+
+{% for doc in myDocs  %}
+{{doc.titulo}}
+{% endfor %}
+
+
+{% endblock content %}
+
+

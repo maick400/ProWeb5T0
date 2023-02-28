@@ -1,0 +1,15 @@
+.btn-a{
+    padding: 10px;
+    background-color: #1B7505; 
+    color: #ffffff;
+    text-decoration: none; 
+    --border-radius: 50px;
+}
+.navbar{
+    width: 100%;
+    background-color: #1B7505;
+}
+.navbar2{
+    width: 100%;
+    background-color: #dfdfdf;
+}

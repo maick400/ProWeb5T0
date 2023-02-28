@@ -1,0 +1,114 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Crear documento{% endblock title %}Crear documento
+{% block content %}
+
+  <div class="container vh-auto">
+    <div class="row justify-content-center p-3 ">
+        <div class="col col-8 rounded-3 shadow bg-light border border-secondary ">
+            <h3 class="text-center">Crear Documento</h3>
+
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form}}
+                <div id="atributoContenedor">
+                    
+                    {% for item in atributosBase  %}             
+    
+                        <label class="form-label" for="">{{item.atributo}} </label>
+    
+    
+                        <input class="form-control"  type="{{item.tipodato}}" name="atributo" id="">
+                        <!--<div class="container p-2 text-end">
+                            <input class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" value = "-" onclick="clicAddAttribute()"/>
+                        </div>-->
+                        <input type="hidden" name="tipoDato" value="{{item.tipodato}}">
+                        <input type="hidden" name="atributoNom" value="{{item.atributo}}">
+    
+    
+    
+                        
+                            
+    
+                    {% endfor %}
+                    <div class="container p-2 text-end">
+                        <input class="btn btn-outline-info" type="button" value = "+" onclick="clicAddAttribute()"/>
+                    </div>
+                </div>
+
+                <input type="hidden" value="{{tipo}}" name="idtipodocumento">
+
+                <div class="col col-12 text-end p-2">
+                    <a href="../" class="btn btn-outline-secondary">Volver</a>
+                    <input  class= "btn btn-primary" type="submit" value="Guardar">
+                </div>
+            </form>
+
+           
+
+        </div>
+    </div>
+  </div>
+
+  <!--{% include "documents/modal_attribs.html" %}-->
+
+  <script>
+    function clicAddAttribute(){
+        // create a new div element
+        const contenedor = document.getElementById("atributoContenedor");
+       
+        const newDiv = document.createElement("div");
+
+        const newlabel = document.createElement("label");
+        newlabel.className = "form-label";
+        newlabel.textContent = "Atributo";        
+
+        const newInput = document.createElement("input");
+        newInput.className = "form-control";
+        newInput.type="text";
+        newInput.name="atributoNew";
+
+        const labeltipoDato = document.createElement("label");
+        labeltipoDato.className = "form-label";
+        labeltipoDato.textContent = "Tipo de dato";        
+        
+        const inputTipoDato = document.createElement("input");
+        inputTipoDato.className = "form-control";
+        inputTipoDato.type="text";
+        inputTipoDato.name="tipoDatoNew";
+
+        const newlabelValue = document.createElement("label");
+        newlabelValue.className = "form-label";
+        newlabelValue.textContent = "Valor";        
+
+        const valueInput = document.createElement("input");
+        valueInput.className = "form-control";
+        valueInput.type= "text";
+        valueInput.name= "valorNew";
+
+        newDiv.appendChild(newlabel);
+        newDiv.appendChild(newInput);
+
+        newDiv.appendChild(labeltipoDato);
+        newDiv.appendChild(inputTipoDato);
+
+
+        newDiv.appendChild(newlabelValue);
+        newDiv.appendChild(valueInput);
+
+        
+        contenedor.appendChild(newlabel);
+        contenedor.appendChild(newInput);
+
+        contenedor.appendChild(labeltipoDato);
+        contenedor.appendChild(inputTipoDato);
+
+        contenedor.appendChild(newlabelValue);
+        contenedor.appendChild(valueInput);
+
+    }
+    
+</script>
+
+{% endblock content %}
+

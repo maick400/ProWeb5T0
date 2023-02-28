@@ -1,0 +1,158 @@
+*{
+    font-family: 'Inter', sans-serif;
+  }
+  body {
+      margin: 0;
+      padding: 0;
+      background: url(/imagenes/RECTORADO_SGA_jQBX4Wj.jpg) no-repeat center top;
+      background-position-y: 35%;
+  
+      font-family: sans-serif;
+      height: 20px;
+      width: 80px;
+   
+    }
+
+    body::before{
+      content: "";
+      width: 100%;
+      min-height: 100%;
+      position:fixed;
+      top: 0;
+      left: 0;
+      background: linear-gradient(10deg, #0CF25D,#025951);
+      opacity: 0.8;
+    }
+    .ima{
+        margin-top: -2%;
+        width: 100%;
+        height: 115%;
+        position:fixed;
+     
+    }
+    
+    .login-box {
+      width: 420px;
+      height: 1020px;
+      background: #ffffff;
+      color: #6b6b6b;
+      margin-top: 30%;
+      margin-bottom: 30%;
+      top: 50%;
+      left: 50%;  
+      position: absolute;
+      transform: translate(-50%, -50%);
+      box-sizing: border-box;
+      padding: 70px 30px;
+    }
+    h1{
+      color: #000000;
+  
+    }
+    
+    .login-box h1 {
+      margin: 0;
+      padding: 0 0 20px;
+      text-align: center;
+      font-size: 22px;
+    }
+    
+    .login-box label {
+      margin: 0;
+      padding: 0;
+      font-weight: bold;
+      display: block;
+    }
+    
+    .login-box input {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    
+    .login-box input[type="text"], .login-box input[type="password"] {
+      border: none;
+      margin-top: 5%;
+      background: #f7f7f7;
+      outline: none;
+      height: 40px;
+      
+      font-size: 16px;
+    }
+    
+    .login-box input[type="submit"] {
+      margin-top: 5%;
+      border: none;
+      outline: none;
+      height: 40px;
+      background:  #1B7505;
+      color: #fff;
+      font-size: 18px;
+      border-radius: 20px;
+    }
+    
+    .login-box input[type="submit"]:hover {
+      cursor: pointer;
+      background: #ffc107;
+      color: #6b6b6b;
+    }
+    
+    .login-box a {
+      font-size: 14px;
+      line-height: 20px;
+      color:  #1B7505;
+    }
+  
+
+    .main-container {
+        width: 100%;
+        min-height: 100px;
+        margin-top: 5%;
+        text-align: center;
+      }
+      
+      .input-container {
+        text-align: center;
+        margin: 10px auto;
+        padding: 10px;
+        overflow: hidden;
+        position: relative;
+        color: rgb(255, 255, 255);
+        cursor: pointer;
+        background-color: #1B7505;
+        border-radius: 20px;
+        display: inline-block;
+      }
+      
+      .input-container [type=file] {
+        cursor: inherit;
+        display: block;
+        font-size: 20px;
+        filter: alpha(opacity=0);
+        min-height: 180px;
+        min-width: 180px;
+        width: 180px;
+        height: 180px;
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        text-align: right;
+        top: 0;
+      }
+      
+      .preview-container {
+        margin: 0 auto;
+        width: 180px;
+        height: 180px;
+        min-height: 100px;
+        background-color: #f7f7f7;
+        padding: 10px;
+        border-radius: 4px ;
+      }
+      
+      .preview-container > img {
+        margin: -6%;
+        width: 180px;
+        height: 180px;
+      }
+    
+    

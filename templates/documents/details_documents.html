@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block content %}
+
+
+<div class="container">
+    <label class="form-label">Titulo</label>
+    <input name="in_titulo" class="form-control" type="text" value="{{registro.titulo}}" />
+</div>
+
+<div class="container">
+    <label class="form-label">Ruta</label>
+    <input name="in_ruta" class="form-control" type="file" value="{{registro.ruta}}" />
+</div>  
+
+{% comment %} <div class="container">
+    <label class="form-label">Tipo de documento</label>
+    
+    <select name="in_tipodocumento" class="form-control">
+        {% for item in tipo %}
+            <option value="{{item.idtipodocumento}}">{{item.tipo}}</option>
+        {% endfor %}
+    </select>
+
+</div>       {% endcomment %}
+
+
+
+
+{% for item in  atributos %}
+<label  class="form-label" for="">{{item.atributo}} </label>    
+<input class="form-control"  type="{{item.tipodato}}" name="atributo" id="" value="{{item.valor}}" disabled>
+
+{% endfor %}
+
+
+{% endblock content %}
+

@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+{% block title %}Crear Tipo de documento{% endblock title %}
+
+{% block content %} 
+<div class="container mt-2">
+    <a href="{% url 'documentos:chooseType'%}" class="btn btn-success">Agregar nuevo tipo</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Tipo de documento</th>
+        <th scope="col">Descripción</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in categories %}
+      <tr>
+        <th>{{item.tipo}}</th>        
+        <td>{{item.Descripción}}</td>
+        <td>
+          <a href="edit_categoryType/{{item.idtipodocumento}}" class="btn btn-warning">Modificar</a>
+          <a href="viewCategoryType/{{item.idtipodocumento}}" class="btn btn-info">Ver</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+{% endblock content %}
+

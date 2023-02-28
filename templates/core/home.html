@@ -1,0 +1,65 @@
+{% extends "core/base.html" %} {% load static %} {% block content %}
+
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+
+  <div class="container-fluid p-2">
+    <div class="row">
+
+      <div class="col col-2">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          
+          <form  method="POST" class="col-12" >
+
+            {% csrf_token %}
+            <input name="search" class="col-12 form-control me-2" type="search"  placeholder="Buscar" aria-label="Search">
+            <button class="col-12 btn btn-outline-success" type="submit">Buscar
+            </button>
+
+            <div class="form-check form-switch">
+              <input value=0 name="chk" class="form-check-input" type="checkbox" role="cat" id="cat">
+              <label class="form-check-label" for="chk-{{cat.idtipodocumento}}">{{cat.tipo}}</label>
+              <li><hr class="divider"></li> 
+  
+            </div>
+  
+            {% for cat in  categories %}
+              
+                <div class="form-check form-switch">
+                  <input value={{cat.idtipodocumento}} name="chk" class="form-check-input" type="checkbox" role="cat" id="cat">
+                  <label class="form-check-label" for="chk-{{cat.idtipodocumento}}">{{cat.tipo}}</label>
+                  <li><hr class="divider"></li> 
+                </div>
+
+  
+            {% endfor %}
+
+       
+          </form>
+          
+         
+         
+        </ul>
+
+      </div>
+
+
+      {% block docscontent %}
+      
+      
+      {% endblock docscontent %}
+      
+
+
+
+
+
+      <!-- -->
+
+
+
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
