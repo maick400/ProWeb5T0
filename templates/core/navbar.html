@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary pt-0">
   <div class="container-fluid mt-0 p-2" style= "background-color: rgb(1, 109, 6) ; ">
-    <a class="navbar-brand" href=" {% url 'home' %} ">Inicio</a>
+    <a class="navbar-brand" href=" {% url 'home' %} "style="color: aliceblue; font-weight: bold;">Inicio</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -16,7 +16,7 @@
         
           <li class="nav-item dropdown">
 
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"  style="color: aliceblue;">
               Mi documentos
             </a>
 
@@ -35,7 +35,7 @@
         {% if user.type == 'ADM' or user.is_superuser %}
           <li class="nav-item dropdown">
 
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a  style="color: aliceblue;" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Mantenimiento
             </a>
 
@@ -55,7 +55,7 @@
 
 
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a  style="color: aliceblue;" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Sesión
           </a>
           <ul class="dropdown-menu">

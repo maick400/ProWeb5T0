@@ -96,12 +96,14 @@ def home(request):
             for idtipo in documentosMarcados:
                 if  tipo.idtipodocumento == int(idtipo):
                     tipo.activado = True
-
-        paginator = Paginator(documentos, 5)
+        
+        paginator = Paginator(documentos, 8)
+        div_agregar = []
+        div_agregar.append(range((len(documentos)+2)%8))
         page_number = request.GET.get('page') or 1
         page_obj = paginator.get_page(page_number)
 
-        return render(request, 'core/home.html', {'docs': page_obj, 'categories': tipos, 'docSeleccionado': documentosMarcados, 'page_obj': page_obj})
+        return render(request, 'core/home.html', {'div_agregar':div_agregar,'docs': page_obj, 'categories': tipos, 'docSeleccionado': documentosMarcados, 'page_obj': page_obj})
     else:
         #Home muestra los documentos que fueron establecidos:      
         docs = Documento.objects.all()
@@ -116,12 +118,14 @@ def home(request):
         tipos.aget_or_create('activado')
         for tipo in tipos:
             tipo.activado = True
-
-        paginator = Paginator(docs, 5)
+        
+        paginator = Paginator(docs, 8)
+        div_agregar = []
+        div_agregar.append(range((len(docs)+2)%8))
         page_number = request.GET.get('page') or 1
         page_obj = paginator.get_page(page_number)
 
-        return  render(request,'core/home.html',{'docs':page_obj, 'categories': tipos, 'page_obj': page_obj})
+        return  render(request,'core/home.html',{'div_agregar':div_agregar,'docs':page_obj, 'categories': tipos, 'page_obj': page_obj})
 
 def users (request): 
     if request.user.is_superuser:

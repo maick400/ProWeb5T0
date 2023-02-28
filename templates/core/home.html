@@ -60,6 +60,19 @@
               </div>
               {% endfor %}
               <!Hasta aqui generar>
+              {% for item in div_agregar %}
+              <p>{{item}}</p>
+              {% for item2 in item %}
+              <p>{{item2}}</p>
+              {% if page_obj.number ==  page_obj.paginator.num_pages %}
+              <div class="col ">
+                  <div class="containerima" style="max-width: 300px; max-height: 1px; position: relative; margin-top: 4%;"
+                    aria-hidden="true">             
+                  </div>
+              </div>
+              {% endif %}
+              {% endfor %}
+              {% endfor %}
           </div>
         </div>
       </form>
