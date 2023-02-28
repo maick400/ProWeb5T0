@@ -26,8 +26,15 @@ urlpatterns = [
     path('Signin/', signin, name='signin'),
     path('Signup/', signup, name='signup'),
     path("Logout/",signout, name="logout"),
+    path('users/', users, name='users'),
+    path('editUser/<id>', editUser, name='editUser'),
+    
+    path('myPorfile/', myPorfile, name='myPorfile'),
+
     path('Documentos/', include('Documents.urls'),name='documentos'),
     path('Usuarios/', include('users.urls', namespace='usuarios')),
+
+    
     path('oauth/', include('social_django.urls', namespace='social')),  
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

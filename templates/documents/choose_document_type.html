@@ -1,28 +1,36 @@
-{% extends 'core/base.html' %} {% block content %}
+{% extends 'core/base.html' %} 
 {% block title %}Crear documento{% endblock title %}
+{% load static %}
+
+{% block content %}
+  
+<link rel="stylesheet" href="{% static 'css/subirdoc.css' %}">
 
 <div class="container">
   <div class="row m-3">
     {% for tipo in tipos %}
 
-    <div class="col col-4">
-      <div class="card">
-        <div class="card-header">Libro</div>
-
-        <div class="card-body">
-          <h5 class="card-title">{{tipo.tipo}}</h5>
-          <p class="card-text">sdsfs</p>
-        </div>
-        <div class="card-footer">
-          <a class="btn btn-info" href="../create/{{tipo.idtipodocumento}}">
-            Subir {{tipo.tipo}}</a
-          >
+    <div class="col-sm-12 col-md-4 col-lg-3 col-xl-2">
+      <div class="col mb-3">
+        <div class="card h-100">
+          <img src="{{tipo.imagen.url}}" class="card-img-top">
+          <div class="card-body">
+            <h5 class="card-title">{{tipo.tipo}}</h5>
+            <p class="card-text">{{tipo.descripcion}}</p>
+          </div>
+          <a class="btn-a" href="{% url 'documentos:create' tipo=tipo.idtipodocumento %}">Subir {{tipo.tipo}}</a>
         </div>
       </div>
     </div>
+
     {% endfor %}
+
+
+    
+
+
 
   </div>
 </div>
-
 {% endblock content %}
+

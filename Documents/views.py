@@ -25,9 +25,10 @@ def index(request):
     if request.method == 'POST':
         #Obtener los toggle buttons que fueron activados
         documentosMarcados = request.POST.getlist('activo')           
+        documentosall= Documento.objects.all().filter(usuario=request.user.id)
 
         #Obtener los documentos que contienen el texto buscado y las categorías seleccionadas
-        documentos = Documento.objects.filter(titulo__contains = request.POST.get("texto"), idtipodocumento__in = documentosMarcados)
+        documentos = documentosall.filter(titulo__contains = request.POST.get("texto"), idtipodocumento__in = documentosMarcados)
 
         #Verificar que exista la imágen de los documentos, si no existe usar la de la categoría.
         for doc in documentos:        
@@ -50,8 +51,11 @@ def index(request):
 
         return render(request,'documents/index_document.html', {'docSeleccionado': documentosMarcados, 'documentos': page_obj, 'categories': tipos, 'page_obj': page_obj})
     else:
-        documentos = Documento.objects.all()  
-
+        if request.user.type   == 'CRE':
+            documentos = Documento.objects.all().filter(usuario_id = request.user.id);
+        else:  
+            documentos = Documento.objects.all();
+        
         for doc in documentos:        
             if(doc.portada):
                 if(os.path.exists(os.getcwd() + doc.portada.url) == False):
@@ -161,22 +165,50 @@ def createCategory(request):
     
     if request.method == 'POST':
         frm = frmCrearCategoria(request.POST, request.FILES)
+        
         if frm.is_valid():
+            frm.save()
+            
+            last_cat = Tipodocumento.objects.last()
+            
+            detalle_atributos_Nuevo = request.POST.getlist('atributoNew')
+            detalle_tipo_Nuevo = request.POST.getlist('tipoDatoNew')
+            
+            
+            for i in range (len(detalle_atributos_Nuevo)):
+                base_doc = Basedocumento(idtipodocumento = last_cat, atributo = detalle_atributos_Nuevo[i], tipodato = detalle_tipo_Nuevo[i])
+                base_doc.save()
+
+                
+            
+            
+            
+            
+            
+            
             frm.save()
             return redirect('documentos:documentos')
         else :
+            
             return render(request, 'documents/createCategory.html', {'form':frm})
 
         
         
     else:
         frm = frmCrearCategoria
-        return render(request, 'documents/createCategory.html', {'form':frm})
+        tiposAtributos = TIPOS_ATRIBUTO
+        return render(request, 'documents/createCategory.html', {'tAtributos': tiposAtributos, 'frmAtributos':frmDetalleDocumento, 'form':frm})
+
+        # return render(request, 'documents/createCategory.html', {'form':frm})
     
 def getCategories(request):
     if(request.method == 'GET'):
+        
         categories =Tipodocumento.objects.all();
         return render(request,'documents/documentsType.html', {'categories': categories})
+    
+def editCategory(request):
+    pass
     
 
 
@@ -186,8 +218,10 @@ def create(request, tipo):
         try:                       
             form = frmCrearCuenta(request.POST, request.FILES)
             
-            if form.is_valid():
+            if form.is_valid():                
+                form.instance.usuario = request.user
                 form.save()
+
                 last_doc_inserted = Documento.objects.latest('iddocumento')
                 
                 tipos = request.POST.getlist('tipoDato')

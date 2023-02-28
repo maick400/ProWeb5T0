@@ -34,6 +34,8 @@ class frmDetalleDocumento(forms.ModelForm):
         widgets = {
             'tipodato':forms.Select(choices=TIPOS_ATRIBUTO, attrs={'class':'form-select', 'hidden': 'hidden'})
         }
+        
+        
 
 class frmCrearCategoria(forms.ModelForm):
     class Meta:

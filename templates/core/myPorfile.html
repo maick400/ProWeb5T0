@@ -1,0 +1,101 @@
+{% extends 'core/base.html' %}
+{% block title %}Mi Perfil{% endblock title %}
+
+{% block content %}
+<div class="container-fluid ">
+
+       
+
+    <div class="bg-image row d-flex justify-content-center align-items-center vh-100">
+
+        <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4">
+    
+                <form class="p-5 shadow rounded-5 bg-light login-container" action="{% url 'myPorfile' %}" method="POST" class="card card-body">
+
+                    {% csrf_token %}
+
+                    {% csrf_token %}
+
+                    <form method="POST" class="card card-body">
+                      <h1 class="text-center">Mi perfil</h1>
+      
+                      {{ error }}
+                      
+                      <div class="row mb-2">
+
+                        <div class="col col-6">
+
+                          <label for="username">Nombre</label>
+                          <input type="text" name="name" id="name"
+                          value = "{{user.first_name}}"
+                          class="form-control" placeholder="Escriba su nombre">
+                        </div>
+
+                        <div class="col col-6">
+                          
+                          <label for="lastname">Apellido</label>
+                          <input type="text" name="lastname" id="lastname"
+                          value = "{{user.last_name}}"
+
+                          class="form-control" placeholder="Escriba su apellido">
+
+                        </div>
+
+                      </div>
+
+
+                          
+                        <label class="mb-2" for="email">Dirección de correo electronico</label>
+                        <input  type="email" name="email" id=""
+                        value = "{{user.email}}"
+
+                        class="form-control mb-2" placeholder="Escriba su apellido">
+
+                        
+                      <div class="mb-3">
+                          <label for="username">Usuario </label>
+                          <input type="text" name="username" id="username"
+                          value = "{{user.username}}"
+
+                          class="form-control" placeholder="Escriba su usuario">
+                      </div>
+
+
+
+      
+                      <div class="mb-3">
+                          <label for="password1">Contraseña</label>
+                          <input type="password" name="password1" id="password1"
+                          class="form-control" placeholder="Escriba su contrasenia">
+                      </div>
+      
+                      <div class="mb-3">
+                          <label for="password2">Repita su contrasena</label>
+                          <input type="password" name="password2" id="password2"
+                          class="form-control" placeholder="Confirme su contrasenia">
+                      </div>
+                      <div class="col-12 text-end">
+
+                       
+                        
+                      
+                        <button type="submit" class="btn btn-success">
+                            Guardar
+                        </button>
+
+                      </div>
+                  </form>
+                 
+
+
+            
+                </form>
+ 
+        </div>
+    
+    </div>
+
+    
+    
+    </div>]
+{% endblock content %}

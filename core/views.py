@@ -38,9 +38,16 @@ def signup (request):
                     password=request.POST.get('password1', "default value")
                     
                 )
+                user.first_name = request.POST.get("name", "default value")
+                user.last_name = request.POST.get("lastname", "default value")
+                user.email = request.POST.get("email", "default value")
                 user.is_active = True
                 user.is_superuser = True
+                
+                if not request.user.is_superuser:
+                    user.type = 'CRE'
                 user.save()
+                
                 return redirect('home')
                 
                 # return render(
@@ -115,3 +122,47 @@ def home(request):
         page_obj = paginator.get_page(page_number)
 
         return  render(request,'core/home.html',{'docs':page_obj, 'categories': tipos, 'page_obj': page_obj})
+
+def users (request): 
+    if request.user.is_superuser:
+        users = User.objects.all()
+        return render(request,'core/users.html',{'users':users})
+    
+def editUser(request, id):
+    if request.user.is_superuser:
+        user = User.objects.get(id=id)
+        
+        
+        return render(request,'core/editUser.html',{'user':user})
+    
+
+def myPorfile(request):
+    if request.method == 'POST':
+        if request.POST['password1'] == request.POST['password2']:
+            user = User.objects.get(id=request.user.id)
+            user.first_name = request.POST.get("name", "default value")
+            user.last_name = request.POST.get("lastname", "default value")
+            user.email = request.POST.get("email", "default value")
+            user.username = request.POST.get("username", "default value")
+            user.set_password(request.POST.get("password1", "default value"))
+            user.save()
+            
+            return render(request,'core/home.html',{'user':user})
+        
+        else: 
+            return render(
+                request,
+                'core/myPorfile.html',
+                {
+                    'form': UserCreationForm,
+                    'error': 'Las contrasenias no coinciden'
+                })
+    
+        
+    else:
+        if request.user.is_authenticated:
+            user = User.objects.get(id=request.user.id)
+            return render(request,'core/myPorfile.html',{'user':user})
+        else:
+            return render(request,'core/login.html',{'form': AuthenticationForm})
+    

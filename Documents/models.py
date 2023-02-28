@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 # Create your models here.
 
@@ -29,6 +31,10 @@ class Documento(models.Model):
     portada = models.ImageField(upload_to='documents/portadas', blank=True, null=True)
     fechasubida = models.DateTimeField(auto_now_add=True)
     ruta = models.FileField(upload_to='documents', blank=True, null=True)
+    
+    publico = models.BooleanField(default=False)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+
     estado = models.CharField(max_length=20, blank=True, null=True)
     
     def __str__(self):
