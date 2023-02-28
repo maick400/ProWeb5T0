@@ -102,21 +102,19 @@ function deleteAttribute(e){
 function showAndHide(e){        
    var buttonClicked = e.target;
    var divElement = buttonClicked.parentElement;
-   var valorelem = document.getElementById('cambiarBtn');
+   
    //minimizeAttribute
    var valorelem1 = document.getElementById('minimizeAttribute');
    if(divElement.parentElement.children[1].style.visibility == "visible"){
        divElement.parentElement.children[1].style.visibility = "hidden";
        divElement.parentElement.children[1].style.display = "none";
-       valorelem.value= '˅';
-       valorelem1.value= '˅';
+       buttonClicked.value= '˅';
    }
    else
    { 
        divElement.parentElement.children[1].style.visibility = "visible";
        divElement.parentElement.children[1].style.display = "block";
-       valorelem.value= '˄';
-       valorelem1.value= '˄';
+       buttonClicked.value= '˄';
    }
   
 }

@@ -45,10 +45,6 @@ class Documento(models.Model):
         db_table = 'documento'
         
         
-        
-    
-
-
 class Tipodocumento(models.Model):
     idtipodocumento = models.BigAutoField(primary_key=True)
     imagen = models.ImageField(upload_to= 'documents/category_type', blank=True, null=True)

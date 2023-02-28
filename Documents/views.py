@@ -196,8 +196,7 @@ def get_document(request, id):
     
        
 
-def createCategory(request):
-    
+def createCategory(request):    
     if request.method == 'POST':
         frm = frmCrearCategoria(request.POST, request.FILES)
         
@@ -215,8 +214,7 @@ def createCategory(request):
                 base_doc.save()
             frm.save()
             return redirect('documentos:documentos')
-        else :
-            
+        else :            
             return render(request, 'documents/createCategory.html', {'form':frm})
 
         
@@ -229,13 +227,14 @@ def createCategory(request):
         # return render(request, 'documents/createCategory.html', {'form':frm})
     
 def getCategories(request):
-    if(request.method == 'GET'):
-        
+    if(request.method == 'GET'):        
         categories =Tipodocumento.objects.all();
         return render(request,'documents/documentsType.html', {'categories': categories})
     
-def editCategory(request):
-    pass
+def editCategory(request, id):
+    categories = Tipodocumento.objects.get(idtipodocumento = id)
+    return render(request,'documents/edit_category.html', {'categories': categories})
+
     
 
 
