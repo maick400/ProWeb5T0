@@ -155,9 +155,27 @@ def get_document(request, id):
                 registro.portada = registro.idtipodocumento.imagen
         else:
             registro.portada = registro.idtipodocumento.imagen     
-        
-        print(registro.portada.url)
-        return render(request,'documents/details_doc.html', {'registro': registro, 'atributos': atributos,'tipos': tipodoc})   
+
+        i = 0;
+        #Obtener otros documentos:
+        docsAlt = Documento.objects.all().order_by("iddocumento")
+        cadena = ""
+        docsAlt.aget_or_create('columnNumber')
+        for doc in docsAlt:                        
+                doc.columnNumber = (doc.iddocumento % 3) + i
+                if(doc.portada):
+                     if(os.path.exists(os.getcwd() + doc.portada.url) == False):
+                        doc.portada = doc.idtipodocumento.imagen
+                else:
+                    doc.portada = doc.idtipodocumento.imagen
+                i = i + 1
+                   
+
+        paginator = Paginator(docsAlt, 3)
+        page_number = request.GET.get('page') or 1
+        page_obj = paginator.get_page(page_number)
+
+        return render(request,'documents/details_doc.html', {'registro': registro, 'atributos': atributos,'tipos': tipodoc, 'docsAlt': page_obj, 'page_obj': page_obj, 'cadena': cadena})  
     
        
 

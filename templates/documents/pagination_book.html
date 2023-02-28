@@ -1,19 +1,27 @@
-<div class="pagination position-relative">
-    <div style="padding-top: 20%;" class="position-absolute top-50 bottom-50 end-50 sticky-bottom">
-        <span class="step-links">
-            <a class="btn btn-primary" href="?page=1">1</a>
-            {% if page_obj.has_previous %}
+
+<div class="container text-center" style="margin-top: 2%;">
+    <div class="row justify-content-md-center">
+        <div class="col">
+            <!COLUMA 1 PARA EL BOTON>
+                <a class="btn btn-primary" href="?page=1">1</a>
+        
+            <!COLUMA 2 PARA EL BOTON>
+                {% if page_obj.has_previous %}
                 <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
-            {% endif %}
-    
-            <span class="current btn btn-primary">
-                {{page_obj.number}} de {{page_obj.paginator.num_pages}}
-            </span>
-    
+                {% endif %}
+
+       
+            <!COLUMA 3 PARA EL BOTON>
+                <span class="current btn btn-primary">
+                    {{page_obj.number}} de {{page_obj.paginator.num_pages}}
+                </span>
+       
             {% if page_obj.has_next %}
-                <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
-                <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+            <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+            <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">{{
+                page_obj.paginator.num_pages
+                }}</a>
             {% endif %}
-        </span>
-    </div>    
+        </div>
+    </div>
 </div>

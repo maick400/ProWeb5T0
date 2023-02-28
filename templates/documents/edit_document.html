@@ -6,7 +6,7 @@
     <div class="row justify-content-center p-3 ">
         <div class="col col-8 rounded-3 shadow bg-light border border-secondary p-4">
 
-            <h3 class="text-center">Editar Documento</h3>
+            <h3 class="text-center control">Editar Documento</h3>
 
             {{frmAtributos}}
 
@@ -38,24 +38,24 @@
                 <div id="atributoContenedor">                    
                         <div class="container">
                             <label class="form-label fw-bold">Titulo</label>
-                            <input name="in_titulo" class="form-control" type="text" value="{{registro.titulo}}" />
+                            <input name="in_titulo" class="form-control" type="text" value="{{registro.titulo}}" style="margin-bottom: 20px;" />
                         </div>
 
-                        <div class="container">
+                        <div class="container"  style="margin-bottom: 20px;">
                             <label class="form-label fw-bold">Archivo</label>
                             <div class="row">
                                 <div class="col-8">
                                     <input name="in_ruta" class="form-control" type="file" value="{{registro.ruta.url}}" />
                                 </div>
                                 <div class="col">
-                                    <button name="in_ruta" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="form-control btn btn-primary" type="button" value="Abrir archivo" />
+                                    <button name="in_ruta" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="form-control btn btn-warning" type="button" value="Abrir archivo" />
                                         Abrir archivo
                                 </button>
                                 </div>
                             </div>
                             
                         </div>                   
-                        <div class="container">
+                        <div class="container"  style="margin-bottom: 20px;">
                             <label class="form-label fw-bold">Tipo de documento</label>
                             <select name="in_tipodocumento" class="form-select">
                                 {% for item in choices %}
@@ -73,20 +73,20 @@
                     </div>       
                     <br>   
 
-                    <div class = "container border border-black border-2 rounded p-3" style = "width: 97%;">
+                    <div class = "container border border-black border-2 rounded p-3" style = "width: 97%; background-color: rgb(228, 228, 228);"">
                         {% for item in atributosDocumento  %}                            
                             <input name="idsDetalleOriginal" type="hidden" value="{{item.id}}"/>
                             <div class="container">                                
                                 <div class = "container">
                                     <input name="idsDetalle" type="hidden" value="{{item.id}}"/>
                                     <label class = "form-label fw-bold">Atributo:</label>                                
-                                    <input class="btn btn-outline-info justify-content-between" type="button" value = "-" onclick=" deleteAttribute(event);
+                                    <input class="btn btn-outline-success justify-content-between" type="button" value = "-" onclick=" deleteAttribute(event);
                                             function deleteAttribute(e){
                                             var buttonClicked = e.target;
                                             buttonClicked.parentElement.parentElement.remove();
                                         }
                                     " style="float:right"/>
-                                    <input class="btn btn-outline-info justify-content-between" type="button" value = "^" onclick="showAndHide(event)" style="float:right"/>
+                                    <input id="cambiarBtn" class="btn btn-outline-success justify-content-between" type="button" value = "˅" onclick="showAndHide(event)" style="float:right"/>
                                     <input name ="atributoModificado" type="text" class = "form-control" value="{{item.atributo}}" />
 
                                 </div>
@@ -118,11 +118,11 @@
                     <div class = "d-flex justify-content-between container">
                         <label class="form-label fw-bold">Nuevos atributos</label>  
                         <div class="text-end">
-                            <input class="btn btn-outline-info" type="button" value = "+" onclick="clicAddAttribute(event)"/>
+                            <input class="btn btn-outline-success" type="button" value = "+" onclick="clicAddAttribute(event)"/>
                         </div>    
                     </div>
                     <br> 
-                    <div id="nuevosAtributos" class = "container border border-black border-2 rounded p-3" style = "width: 95%;">
+                    <div id="nuevosAtributos" class = "container border border-black border-2 rounded p-3" style = "width: 95%; ">
 
                     </div>  
                 </div>
@@ -130,9 +130,9 @@
 
                 <input type="hidden" value="{{registro.iddocumento}}" name="idtipodocumento">
 
-                <div class="col col-12 text-end p-2">
-                    <a href="../" class="btn btn-outline-secondary">Volver</a>
-                    <input  class= "btn btn-primary" type="submit" value="Guardar">
+                <div class="col col-12 text-end p-2"  style="margin-top: 20px;">
+                    <a href="../" class="btn btn-outline-warning">Volver</a>
+                    <input  class= "btn btn-success" type="submit" value="Guardar">
                 </div>
             </form>
         </div>
