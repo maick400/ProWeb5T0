@@ -7,7 +7,7 @@
     <div class="row justify-content-center p-3 ">
         <div class="col col-8 rounded-3 shadow bg-light border border-secondary ">
             <h3 class="text-center">Crear Documento</h3>
-
+         
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{form}}
@@ -24,11 +24,6 @@
                         </div>-->
                         <input type="hidden" name="tipoDato" value="{{item.tipodato}}">
                         <input type="hidden" name="atributoNom" value="{{item.atributo}}">
-    
-    
-    
-                        
-                            
     
                     {% endfor %}
                     <div class="container p-2 text-end">
@@ -48,64 +43,113 @@
 
         </div>
     </div>
+    {{frmAtributos}}
   </div>
 
   <!--{% include "documents/modal_attribs.html" %}-->
 
   <script>
     function clicAddAttribute(){
-        // create a new div element
-        const contenedor = document.getElementById("atributoContenedor");
+          // create a new div element
+          const contenedor = document.getElementById("atributoContenedor");
        
-        const newDiv = document.createElement("div");
+       const newDiv = document.createElement("div");
+       newDiv.id = "atributoContenedor";
 
-        const newlabel = document.createElement("label");
-        newlabel.className = "form-label";
-        newlabel.textContent = "Atributo";        
+       const newlabel = document.createElement("label");
+       newlabel.className = "form-label";
+       newlabel.textContent = "Atributo";        
 
-        const newInput = document.createElement("input");
-        newInput.className = "form-control";
-        newInput.type="text";
-        newInput.name="atributoNew";
+       const newInput = document.createElement("input");
+       newInput.className = "form-control";
+       newInput.type="text";
+       newInput.name="atributoNew";
 
-        const labeltipoDato = document.createElement("label");
-        labeltipoDato.className = "form-label";
-        labeltipoDato.textContent = "Tipo de dato";        
-        
-        const inputTipoDato = document.createElement("input");
-        inputTipoDato.className = "form-control";
-        inputTipoDato.type="text";
-        inputTipoDato.name="tipoDatoNew";
+       const labeltipoDato = document.createElement("label");
+       labeltipoDato.className = "form-label";
+       labeltipoDato.textContent = "Tipo de dato";        
+       
+       const inputTipoDato = document.createElement("input");
+       inputTipoDato.className = "form-control";
+       inputTipoDato.type="text";
+       inputTipoDato.name="tipoDatoNew";
 
-        const newlabelValue = document.createElement("label");
-        newlabelValue.className = "form-label";
-        newlabelValue.textContent = "Valor";        
+       //Tipos de datos para los inputs.
+       //selectTipoDato.className = "form-select";
+       const atributosDisponibles = document.getElementById("id_tipodato");       
+       const selectTipoDato = atributosDisponibles.cloneNode(true);
+       selectTipoDato.removeAttribute("hidden");
+       selectTipoDato.name = "tipoDatoNew";
 
-        const valueInput = document.createElement("input");
-        valueInput.className = "form-control";
-        valueInput.type= "text";
-        valueInput.name= "valorNew";
+       /*for(let i = 0; i <= atributosDisponibles.children.length; i++){
+           let newOption = atributosDisponibles.children[i];
+           selectTipoDato.appendChild(newOption);
+       }*/
 
-        newDiv.appendChild(newlabel);
-        newDiv.appendChild(newInput);
+       const newlabelValue = document.createElement("label");
+       newlabelValue.className = "form-label";
+       newlabelValue.textContent = "Valor";        
 
-        newDiv.appendChild(labeltipoDato);
-        newDiv.appendChild(inputTipoDato);
+       const valueInput = document.createElement("input");
+       valueInput.className = "form-control";
+       valueInput.type= "text";
+       valueInput.name= "valorNew";
 
+       const divBarraNuevoAttribute = document.createElement("div");
+      
+       divBarraNuevoAttribute.id = "divBarraAtributo";
 
-        newDiv.appendChild(newlabelValue);
-        newDiv.appendChild(valueInput);
+       const inputDeleteAttribute = document.createElement("input");
+       inputDeleteAttribute.type = "button";
+       inputDeleteAttribute.id = "deleteAttribute";
+       inputDeleteAttribute.value = " -";
+       inputDeleteAttribute.className = "btn btn-outline-info justify-content-between";
+       inputDeleteAttribute.style = "float: right";
 
-        
-        contenedor.appendChild(newlabel);
-        contenedor.appendChild(newInput);
+       inputDeleteAttribute.onclick = ('onClick',() => deleteAttribute(event))
 
-        contenedor.appendChild(labeltipoDato);
-        contenedor.appendChild(inputTipoDato);
+       const minimizeAttribute  = document.createElement("input");
+       minimizeAttribute.type = "button";
+       minimizeAttribute.id = "minimizeAttribute";
+       minimizeAttribute.className = "btn btn-outline-info justify-content-between";
+       minimizeAttribute.style = "float: right";
+       minimizeAttribute.value = "^";
+       minimizeAttribute.onclick = ('onClick',() => showAndHide(event));
 
-        contenedor.appendChild(newlabelValue);
-        contenedor.appendChild(valueInput);
+       //contenedor.appendChild(newlabel);
+       divBarraNuevoAttribute.style.display = "block";
 
+       divBarraNuevoAttribute.appendChild(newlabel);
+       divBarraNuevoAttribute.appendChild(inputDeleteAttribute);
+       divBarraNuevoAttribute.appendChild(minimizeAttribute);
+       divBarraNuevoAttribute.appendChild(document.createElement("br"));
+       divBarraNuevoAttribute.appendChild(newInput);
+       
+   
+       const divContentAttribute = document.createElement("div");        
+       divContentAttribute.id = "divBarraAtributo";
+  
+       divContentAttribute.appendChild(labeltipoDato);
+       divContentAttribute.appendChild(selectTipoDato);
+       //divContentAttribute.appendChild(inputTipoDato);
+       divContentAttribute.appendChild(newlabelValue);
+       divContentAttribute.appendChild(valueInput);
+       
+
+       divContentAttribute.style.visibility = "visible";
+
+       newDiv.appendChild(divBarraNuevoAttribute);
+       newDiv.appendChild(divContentAttribute);
+       newDiv.style.visibility = "visible";
+       /*newDiv.appendChild(newInput);
+
+       newDiv.appendChild(labeltipoDato);
+       newDiv.appendChild(inputTipoDato);
+
+       newDiv.appendChild(newlabelValue);
+       newDiv.appendChild(valueInput);*/
+
+       contenedor.appendChild(newDiv);
     }
     
 </script>

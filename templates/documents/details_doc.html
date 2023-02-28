@@ -5,110 +5,336 @@
 {% block content %}
 
 
- 
 
 
- <form action="#" class="border p-1 form">
+
+<form action="#" class="border p-4 form">
     <div class="container" style="margin-top: 1%;">
-      <div class="form-group">
-        <label style="margin-top: 2%; font-size: 40px; font-weight: 800;">  {{registro.titulo}}</label>
-      </div>
-      <div class="row">
-        <div class="col order-last" style="margin-left: 5%; margin-top: 2%;">
+        <div class="form-group">
+            <label style="margin-top: 2%; font-size: 40px; font-weight: 800;"> {{registro.titulo}}</label>
+        </div>
+        <div class="row ">
+            <div class="col order-last col-sm-7" style=" margin-top: 1%;">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <tbody>
+
+                            <tr>
+                                <td>Tipo: &nbsp;</td>
+                                <td>{{registro.idtipodocumento.tipo}}</td>
+                            </tr>
+
+                            {% for atr in atributos %}
+
+                            <tr>
+                                <td> {{atr.atributo}}&nbsp;</td>
+                                <td>{{atr.valor}}</td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col order-first col-sm-4" style="margin-bottom: 3%; margin-right: 2%;">
+                <!Portada>
+                    <div class="containerima"
+                        style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;" aria-hidden="true">
+                        <img width="100%" height="100%"
+                            src="/static/img/3000-solved-problems-in-electric-circuits-schaums-syed-a-nasar-1st-edition-250x325.jpg">
+                        <div class="content">
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <!botones para ver el documento>
+            <div class="container text-center" style="margin-top: 2%;">
+                <div class="row justify-content-md-center">
+                    <div class="col align-items-center">
+                        <!COLUMA 1 PARA EL BOTON>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop" style="padding-left: 30%; padding-right: 30%; ">
+                                Ver
+                            </button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop" style="padding-left: 26%; padding-right: 26%; ">
+                            Descargar
+                        </button>
+                    </div>
+                </div>
+            </div>
+    </div>
+</form>
+
+<div class="container">
+    <div class="container" style="margin-top: 5%;">
+        <div class="panel panel-primary">
             <div class="table-responsive">
                 <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Fichero</th>
+                            <th>Descripción</th>
+                            <th>Páginas</th>
+                            <th>Tamaño</th>
+                            <th>Formato</th>
+                        </tr>
+                    </thead>
                     <tbody>
-
                         <tr>
-                            <td>Tipo: &nbsp;</td>
-                            <td>{{registro.idtipodocumento.tipo}}</td>
+                            <td>{{registro.ruta.name}}</td>
+                            <td>{{registro.titulo}}</td>
+                            <td>10 pag.</td>
+                            <td>2.56 MB</td>
+                            <td>PDF</td>
                         </tr>
-                        
-                       {% for atr in atributos  %}
-                         
-                        <tr>
-                            <td> {{atr.atributo}}&nbsp;</td>
-                            <td>{{atr.valor}}</td>
-                        </tr>
-                       {% endfor %}
-
                     </tbody>
                 </table>
             </div>
-
         </div>
+    </div>
+    <!--Aqui inicia el modal-->
+    <div div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 80% !important;" role="document">
+            <div class="modal-content">
 
+                <!-- Cabecera del modal-->
+                <div class="modal-header">
+                    <h4 class="modal-title">Titulo</h4>
+                    <button button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
+                <!-- Pdf -->
+                <div class="modal-body">
+                    <iframe
+                        src="https://www.dspace.espol.edu.ec/retrieve/4c89f87c-44dd-4c5d-8923-115b1d6643cd/EXA-2022-1S-SIMULACI%c3%93N%20MATEM%c3%81TICA-1-1Par.pdf"
+                        width="100%" height="500px" id="myframe"></iframe>
+                </div>
 
-        <div class="col order-first" style="margin-bottom: 3%;">
-          <!Libro 1>
-            <div class="containerima" style="max-width: 370px; position: relative; margin-top: 4%;"
-              aria-hidden="true">
-              <img width="300" height="375"
-                src="{{registro.portada.url}}">
-              <div class="content">
-              </div>
             </div>
         </div>
-      </div>
     </div>
-  </form>
 
-<div class="container">
-    
+</div><!-- Model End   -->
 
-    <div class="Resumen">
-        <u>
-            <h3>Resumen</h3>
-        </u>
-        <p>
-            {{registro.resumen}}
-        </p>
-    </div>
-</div>
 
-<div class="container" style="margin-top: 5%;">
-    <div class="panel panel-primary">
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Fichero</th>
-                        <th>Descripción</th>
-                        <th>Páginas</th>
-                        <th>Tamaño</th>
-                        <th>Formato</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{registro.ruta.name}}</td>
-                        <td>{{registro.titulo}}</td>
-                        <td>10 pag.</td>
-                        <td>2.56 MB</td>
-                        <td>PDF</td>
-                        <td>
-                            <a class="btn btn-success" target="_blank"
-                                href="/bitstream/123456789/1897/1/RECALDE%20SOLANO%20%20CRISTHIAN%20ANDR%c3%89S.pdf">
-                                Visualizar/Abrir
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+<!RELACIONADOS>
+    <div class="container">
+        <div class="row align-items-center">
+
+            <div class="col align-items-center">
+                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                    <div class="col order-last">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <!Los activos>
+                                    <div class="row">
+                                        <div class="col order-last">
+                                            <!Libro 1>
+                                                <div class="containerima"
+                                                    style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
+                                                    aria-hidden="true">
+                                                    <img width="100%" height="100%"
+                                                        src="/static/img/3000-solved-problems-in-electric-circuits-schaums-syed-a-nasar-1st-edition-250x325.jpg">
+                                                    <div class="content">
+                                                        <p>
+                                                            <a class="titulos-libros" href="./LecturaDoc.html"
+                                                                style=" color: #dfdfdf;  font-size: 20px; font-weight: 900; ">3000
+                                                                Solved Problems
+                                                                in
+                                                                Electric
+                                                                Circuits 1st Edition</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                        </div>
+                                        <div class="col">
+                                            <!Libro 1>
+                                                <div class="containerima"
+                                                    style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
+                                                    aria-hidden="true">
+                                                    <img width="100%" height="100%"
+                                                        src="/static/img/analisis-de-los-procesos-y-admin-de-los-productos-arquitectonicos-tomo-1-250x325.png">
+                                                    <div class="content">
+                                                        <p>
+                                                            <a class="titulos-libros" href="./LecturaDoc.html"
+                                                                style=" color: #dfdfdf;  font-size: 20px; font-weight: 900;">3000
+                                                                Solved Problems in Electric Circuits 1st Edition</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="col order-first">
+                                            <!Libro 1>
+                                                <div class="containerima"
+                                                    style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
+                                                    aria-hidden="true">
+                                                    <img width="100%" height="100%"
+                                                        src="/static/img/auditoria-ambiental-julian-rodriguez-angel-alcaide-jose-francisco-castro-patricia-rodriguez-1ra-edicion-250x325.jpg">
+                                                    <div class="content">
+                                                        <p>
+                                                            <a class="titulos-libros" href="./LecturaDoc.html"
+                                                                style=" color: #dfdfdf;  font-size: 20px; font-weight: 900;">3000
+                                                                Solved Problems in Electric Circuits 1st Edition</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <!Los activos>
+                            </div>
+                            <!NEX>
+                                <div class="carousel-item">
+                                    <div class="row">
+                                        <div class="col order-last">
+                                            <!Libro 1>
+                                                <div class="containerima"
+                                                    style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
+                                                    aria-hidden="true">
+                                                    <img width="100%" height="100%" src="/static/img/barras.png">
+                                                    <div class="content">
+                                                        <p>
+                                                            <a class="titulos-libros" href="./LecturaDoc.html"
+                                                                style=" color: #dfdfdf;  font-size: 20px; font-weight: 900; ">3000
+                                                                Solved Problems
+                                                                in
+                                                                Electric
+                                                                Circuits 1st Edition</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                        </div>
+                                        <div class="col">
+                                            <!Libro 1>
+                                                <div class="containerima"
+                                                    style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
+                                                    aria-hidden="true">
+                                                    <img width="100%" height="100%"
+                                                        src="/static/img/cinetica-quimica-gordon-m-harris-1ra-edicion.jpg">
+                                                    <div class="content">
+                                                        <p>
+                                                            <a class="titulos-libros" href="./LecturaDoc.html"
+                                                                style=" color: #dfdfdf;  font-size: 20px; font-weight: 900;">3000
+                                                                Solved Problems in Electric Circuits 1st Edition</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="col order-first">
+                                            <!Libro 1>
+                                                <div class="containerima"
+                                                    style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
+                                                    aria-hidden="true">
+                                                    <img width="100%" height="100%"
+                                                        src="./libros ejemplos/3000-solved-problems-in-electric-circuits-schaums-syed-a-nasar-1st-edition-250x325.jpg">
+                                                    <div class="content">
+                                                        <p>
+                                                            <a class="titulos-libros" href="./LecturaDoc.html"
+                                                                style=" color: #dfdfdf;  font-size: 20px; font-weight: 900;">3000
+                                                                Solved Problems in Electric Circuits 1st Edition</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <!NEX>
+                                </div>
+                                <!NEX>
+                                    <div class="carousel-item">
+                                        <div class="row">
+                                            <div class="col order-last">
+                                                <!Libro 1>
+                                                    <div class="containerima"
+                                                        style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
+                                                        aria-hidden="true">
+                                                        <img width="100%" height="100%"
+                                                            src="./libros ejemplos/3000-solved-problems-in-electric-circuits-schaums-syed-a-nasar-1st-edition-250x325.jpg">
+                                                        <div class="content">
+                                                            <p>
+                                                                <a class="titulos-libros" href="./LecturaDoc.html"
+                                                                    style=" color: #dfdfdf;  font-size: 20px; font-weight: 900; ">3000
+                                                                    Solved Problems
+                                                                    in
+                                                                    Electric
+                                                                    Circuits 1st Edition</a>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <div class="col">
+                                                <!Libro 1>
+                                                    <div class="containerima"
+                                                        style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
+                                                        aria-hidden="true">
+                                                        <img width="100%" height="100%"
+                                                            src="./libros ejemplos/3000-solved-problems-in-electric-circuits-schaums-syed-a-nasar-1st-edition-250x325.jpg">
+                                                        <div class="content">
+                                                            <p>
+                                                                <a class="titulos-libros" href="./LecturaDoc.html"
+                                                                    style=" color: #dfdfdf;  font-size: 20px; font-weight: 900;">3000
+                                                                    Solved Problems in Electric Circuits 1st Edition</a>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <div class="col order-first">
+                                                <!Libro 1>
+                                                    <div class="containerima"
+                                                        style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
+                                                        aria-hidden="true">
+                                                        <img width="100%" height="100%"
+                                                            src="./libros ejemplos/3000-solved-problems-in-electric-circuits-schaums-syed-a-nasar-1st-edition-250x325.jpg">
+                                                        <div class="content">
+                                                            <p>
+                                                                <a class="titulos-libros" href="./LecturaDoc.html"
+                                                                    style=" color: #dfdfdf;  font-size: 20px; font-weight: 900;">3000
+                                                                    Solved Problems in Electric Circuits 1st Edition</a>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!NEX>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
+    <!botones del carrusel>
+        <div class="container" style="margin-top: 2%;">
+            <div class="row justify-content-md-center">
+                <div class="col">
+                    <!COLUMA 1 PARA EL BOTON>
+                        <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#carouselExampleControls"
+                            data-slide="prev" style="padding-left: 16%; padding-right: 16%;">
+                            < </a>
+                </div>
+                <div class="col">
+                    <h5 style="text-align: center;">Numero de articulos</h5>
+                </div>
+                <div class="col">
+                    <!COLUMA 1 PARA EL BOTON>
+                        <a data-toggle="carousel-control-next" class="clickLink btn btn-warning"
+                            href="#carouselExampleControls" data-slide="next"
+                            style="padding-left: 16%; padding-right: 16%; margin-left: 66%;">
+                            >
+                        </a>
+                </div>
+            </div>
+        </div>
 
-<div class="Footer" style="margin-top: 50px;
-padding: 1.5%;
-background-color: #1B7505;"></div>
+        <footer class="text-white" style="margin-top: 20px; background-color: rgb(1, 109, 6) ; ">
+            footer
+        </footer>
 
 
 
-{% endblock content %}
-
-
-
-
+        {% endblock content %}

@@ -17,9 +17,7 @@ urlpatterns = [
      path('details/<id>', get_document, name='details'),
      path('createCategory/', createCategory, name='createCategory'),
      path('categories/', getCategories, name='categories'),
-     path('search/', getCategories, name='categories'),
-     path('myDocs/', myDocs, name='myDocs'),
-     path('edit_categoryType/<id>', edit_category, name='edit_categoryType'),
+     path('search/', getCategories, name='categories')
      
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

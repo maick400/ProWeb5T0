@@ -134,6 +134,9 @@ SESSION_TIMEOUT_REDIRECT = 'signin'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
+X_FRAME_OPTIONS = 'ALLOWALL'
+
+XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
 
 LANGUAGE_CODE = 'es-es'
 

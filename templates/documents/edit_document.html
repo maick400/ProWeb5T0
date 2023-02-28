@@ -4,22 +4,59 @@
 
   <div class="container vh-auto">
     <div class="row justify-content-center p-3 ">
-        <div class="col col-8 rounded-3 shadow bg-light border border-secondary ">
+        <div class="col col-8 rounded-3 shadow bg-light border border-secondary p-4">
+
             <h3 class="text-center">Editar Documento</h3>
+
+            {{frmAtributos}}
+
+          
+            <!--Aqui inicia el modal-->
+            <div div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog" style="max-width: 80% !important;" role="document">
+                <div class="modal-content">
+
+                    <!-- Cabecera del modal-->
+                    <div class="modal-header">
+                    <h4 class="modal-title">Documento: {{registro.titulo}}</h4>
+                    <button button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Pdf -->
+                    <div class="modal-body">
+                    <iframe src="{{registro.ruta.url}}" width="100%" height="500px" id="myframe"></iframe>
+                    </div>
+
+                </div>
+                </div>
+            </div>
+
+                        
 
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div id="atributoContenedor">                    
                         <div class="container">
-                            <label class="form-label">Titulo</label>
+                            <label class="form-label fw-bold">Titulo</label>
                             <input name="in_titulo" class="form-control" type="text" value="{{registro.titulo}}" />
                         </div>
+
                         <div class="container">
-                            <label class="form-label">Ruta</label>
-                            <input name="in_ruta" class="form-control" type="file" value="{{rutasDoc}}" />
+                            <label class="form-label fw-bold">Archivo</label>
+                            <div class="row">
+                                <div class="col-8">
+                                    <input name="in_ruta" class="form-control" type="file" value="{{registro.ruta.url}}" />
+                                </div>
+                                <div class="col">
+                                    <button name="in_ruta" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="form-control btn btn-primary" type="button" value="Abrir archivo" />
+                                        Abrir archivo
+                                </button>
+                                </div>
+                            </div>
+                            
                         </div>                   
                         <div class="container">
-                            <label class="form-label">Tipo de documento</label>
+                            <label class="form-label fw-bold">Tipo de documento</label>
                             <select name="in_tipodocumento" class="form-select">
                                 {% for item in choices %}
                                     <option value="{{item.idtipodocumento}}">{{item.tipo}}</option>
@@ -27,14 +64,69 @@
                             </select>
                         </div>      
                     <div class="container">
-                        <label class="form-label">Estado</label>
+                        <label class="form-label fw-bold">Estado</label>
                         <select name="in_estado" class="form-select">
                             {% for item in estado %}
                                 <option value="{{item}}">{{item}}</option>
                             {% endfor %}
                         </select>
-                    </div>                
+                    </div>       
+                    <br>   
+
+                    <div class = "container border border-black border-2 rounded p-3" style = "width: 97%;">
+                        {% for item in atributosDocumento  %}                            
+                            <input name="idsDetalleOriginal" type="hidden" value="{{item.id}}"/>
+                            <div class="container">                                
+                                <div class = "container">
+                                    <input name="idsDetalle" type="hidden" value="{{item.id}}"/>
+                                    <label class = "form-label fw-bold">Atributo:</label>                                
+                                    <input class="btn btn-outline-info justify-content-between" type="button" value = "-" onclick=" deleteAttribute(event);
+                                            function deleteAttribute(e){
+                                            var buttonClicked = e.target;
+                                            buttonClicked.parentElement.parentElement.remove();
+                                        }
+                                    " style="float:right"/>
+                                    <input class="btn btn-outline-info justify-content-between" type="button" value = "^" onclick="showAndHide(event)" style="float:right"/>
+                                    <input name ="atributoModificado" type="text" class = "form-control" value="{{item.atributo}}" />
+
+                                </div>
+                                <div  class = "container" style="visibility: hidden; display:none;">       
+                                   
+                                    <label class = "form-label fw-bold">Tipo:</label>
+                                    <select name="tipoModificado" class="form-select">                                        
+                                    {% for atr in tAtributos %}
+                                        {% if atr.0 == item.tipodato %}                                            
+                                        <option value="{{atr.0}}" selected>
+                                            {{atr.1}}
+                                        </option>                                        
+                                        {% else %}
+                                        <option value="{{atr.0}}">
+                                            {{atr.1}}                          
+                                        </option>                                        
+                                        {% endif %}
+                                    {% endfor %}
+                                    </select>
+                                    <label class = "form-label fw-bold">Valor:</label>
+                                    <input name ="valorModificado" type="text"  class = "form-control"value="{{item.valor}}" />
+                                </div>
+                                <div class="border border-top-0 border-left-0 border-rigth-0 mt-2"></div> 
+                            </div>
+                        {% endfor %}
+                    </div>     
+                    <br>
+
+                    <div class = "d-flex justify-content-between container">
+                        <label class="form-label fw-bold">Nuevos atributos</label>  
+                        <div class="text-end">
+                            <input class="btn btn-outline-info" type="button" value = "+" onclick="clicAddAttribute(event)"/>
+                        </div>    
+                    </div>
+                    <br> 
+                    <div id="nuevosAtributos" class = "container border border-black border-2 rounded p-3" style = "width: 95%;">
+
+                    </div>  
                 </div>
+               
 
                 <input type="hidden" value="{{registro.iddocumento}}" name="idtipodocumento">
 
@@ -44,6 +136,14 @@
                 </div>
             </form>
         </div>
+        
+        <script src="{% static '/js/add_attributes.js' %}"></script>   
+        <script>
+            function deleteAttribute(e){
+            var buttonClicked = e.target;
+            buttonClicked.parentElement.parentElement.remove();
+        }
+        </script>
     </div>
-  </div>
+  </div> 
 {% endblock content %}

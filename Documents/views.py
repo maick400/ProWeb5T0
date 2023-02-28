@@ -1,6 +1,9 @@
 import os
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.core.files.storage import default_storage
+from django.core.files import File
+from core import settings
 from .forms import *
 from django.http import HttpResponse, Http404
 import mimetypes
@@ -8,14 +11,8 @@ from .models import Tipodocumento, Documento
 from django.db import connection
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
-
-from django.views.generic import TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
-
-
-class HomeView(LoginRequiredMixin, TemplateView):
-    template_name = "home.html" 
-
+from core.choices2 import *
+from django.core.paginator import Paginator
 
 # from ..core import settings
 
@@ -25,42 +22,109 @@ class HomeView(LoginRequiredMixin, TemplateView):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def index(request):
     tipos = Tipodocumento.objects.all()
-    
-    if request.user.type   == 'CRE':
-        documentos = Documento.objects.all().filter(usuario_id = request.user.id);
-    else:  
-        documentos = Documento.objects.all();
-    
-    
-    # for doc in documentos:
-    #     if doc.portada == None:
-    #         tipoGEt = Tipodocumento.objects.all().filter(idtipodocumento = doc.idtipodocumento)
-    #         doc.portada= tipoGEt.imagen
-        
-    return render(request,'documents/index_document.html', {'documentos': documentos, 'categories': tipos})
+    if request.method == 'POST':
+        #Obtener los toggle buttons que fueron activados
+        documentosMarcados = request.POST.getlist('activo')           
+
+        #Obtener los documentos que contienen el texto buscado y las categorías seleccionadas
+        documentos = Documento.objects.filter(titulo__contains = request.POST.get("texto"), idtipodocumento__in = documentosMarcados)
+
+        #Verificar que exista la imágen de los documentos, si no existe usar la de la categoría.
+        for doc in documentos:        
+            if(doc.portada):
+                if(os.path.exists(os.getcwd() + doc.portada.url) == False):
+                    doc.portada = doc.idtipodocumento.imagen
+            else:
+                doc.portada = doc.idtipodocumento.imagen       
+
+        tipos.aget_or_create('activado')
+        for tipo in tipos:
+            for idtipo in documentosMarcados:
+                if  tipo.idtipodocumento == int(idtipo):
+                    tipo.activado = True
+
+        paginator = Paginator(documentos, 5)
+        page_number = request.GET.get('page') or 1
+        page_obj = paginator.get_page(page_number)
+
+
+        return render(request,'documents/index_document.html', {'docSeleccionado': documentosMarcados, 'documentos': page_obj, 'categories': tipos, 'page_obj': page_obj})
+    else:
+        documentos = Documento.objects.all()  
+
+        for doc in documentos:        
+            if(doc.portada):
+                if(os.path.exists(os.getcwd() + doc.portada.url) == False):
+                    doc.portada = doc.idtipodocumento.imagen
+            else:
+                doc.portada = doc.idtipodocumento.imagen       
+                
+        tipos.aget_or_create('activado')
+        for tipo in tipos:
+            tipo.activado = True
+            
+        paginator = Paginator(documentos, 5)
+        page_number = request.GET.get('page') or 1
+        page_obj = paginator.get_page(page_number)
+
+        return render(request,'documents/index_document.html', {'documentos': page_obj, 'categories': tipos, 'page_obj': page_obj})
 
 
 @login_required
 def edit(request, codigo):
+    registro = Documento.objects.get(iddocumento = codigo)
+    choices = Tipodocumento.objects.all();
+    atributosDocumento = Detalledocumento.objects.filter(iddocumento = codigo);
+    estados = ["En análisis", "Aceptado", "Rechazado", "No revisado"]
+    tiposAtributos = TIPOS_ATRIBUTO
+
     if request.method == 'POST':        
+        
+
         documentoEdit = Documento.objects.get(iddocumento = codigo)
         documentoEdit.titulo = request.POST["in_titulo"]
         
-        documentoEdit.ruta = request.FILES["in_ruta"]
+        if(request.POST.get("in_ruta") == ''):
+            print("No Válido")
+        else:
+            print("Válido")
+            documentoEdit.ruta = request.FILES["in_ruta"]
 
         tipoDoc = Tipodocumento.objects.get(idtipodocumento=request.POST["in_tipodocumento"])
         documentoEdit.idtipodocumento = tipoDoc
         documentoEdit.estado = request.POST["in_estado"]
 
+        ids_detallesOriginal = request.POST.getlist('idsDetalleOriginal')
+
+        detalle_atributos = request.POST.getlist('atributoModificado')
+        detalle_tipo = request.POST.getlist('tipoModificado')
+        valor_atributos = request.POST.getlist('valorModificado')
+        ids_detalles = request.POST.getlist('idsDetalle')
+
+        detalle_atributos_Nuevo = request.POST.getlist('atributoNew')
+        detalle_tipo_Nuevo = request.POST.getlist('tipoDatoNew')
+        valor_atributos_Nuevo = request.POST.getlist('valorNew')
+
+        for i in range (len(ids_detalles)):           
+            detalleEditar = Detalledocumento(id=ids_detalles[i], atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = documentoEdit)
+            
+            ids_detallesOriginal.remove(ids_detalles[i]);
+            detalleEditar.save();
+        
+        for i in range (len(valor_atributos_Nuevo)):           
+            detalleEditar = Detalledocumento( atributo=detalle_atributos_Nuevo[i], tipodato = detalle_tipo_Nuevo[i], valor = valor_atributos_Nuevo[i], iddocumento = documentoEdit )
+            detalleEditar.save();
+
+        for i in range  (len(ids_detallesOriginal)):
+            detalleEliminar = Detalledocumento.objects.get(id = ids_detallesOriginal[i]);
+            detalleEliminar.delete();
+        
+
         documentoEdit.save()
 
         return redirect('../../Documentos/')        
-    else:
-        registro = Documento.objects.get(iddocumento = codigo)
-        choices = Tipodocumento.objects.all();
-        estados = ["En análisis", "Aceptado", "Rechazado", "No revisado"]
-        rutasDoc = os.getcwd()  + registro.ruta.url
-        return render(request, 'documents/edit_document.html', {'rutasDoc':rutasDoc, 'form':frmCrearCuenta, 'registro': registro, 'codigo':codigo, 'choices':choices, 'estado':estados})
+    else:      
+        return render(request, 'documents/edit_document.html', {'tAtributos': tiposAtributos, 'frmAtributos':frmDetalleDocumento, 'form':frmCrearCuenta, 'registro': registro, 'codigo':codigo, 'choices':choices, 'estado':estados, 'atributosDocumento':atributosDocumento})
 
 
 def choose_document(request):
@@ -71,15 +135,24 @@ def choose_document(request):
         return render(request,'documents/choose_document_type.html', {'tipos': tipos})
     
 @login_required  
-def get_document(request, id):
-    
+def get_document(request, id):    
     if request.method == 'POST':
         pass
     else:
         registro = Documento.objects.get(iddocumento = id)
         atributos = Detalledocumento.objects.filter(iddocumento = id)
         tipodoc = Tipodocumento.objects.all()
-        print(registro.ruta.url)
+
+        #Verificar que exista la portada para el registro seleccionado
+        if(registro.portada):
+            #Verificar que exista el archivo en la carpeta donde se almacenan las rutas
+            #Si no existe el imagen para la portada del documento asignar la de la categoría
+            if(os.path.exists(os.getcwd() + registro.portada.url) == False):
+                registro.portada = registro.idtipodocumento.imagen
+        else:
+            registro.portada = registro.idtipodocumento.imagen     
+        
+        print(registro.portada.url)
         return render(request,'documents/details_doc.html', {'registro': registro, 'atributos': atributos,'tipos': tipodoc})   
     
        
@@ -105,15 +178,6 @@ def getCategories(request):
         categories =Tipodocumento.objects.all();
         return render(request,'documents/documentsType.html', {'categories': categories})
     
-def myDocs(request):
-    if(request.method == 'GET'):
-        if request.user.type   == 'CRE':
-            myDocs = Documento.objects.all().filter(usuario_id = request.user.id);
-        else:  
-            myDocs = Documento.objects.all();
-        
-        return render(request, 'documents/myDocs.html', {'myDocs': myDocs})
-
 
 
 def create(request, tipo): 
@@ -121,9 +185,8 @@ def create(request, tipo):
     if request.method == 'POST':    
         try:                       
             form = frmCrearCuenta(request.POST, request.FILES)
-
+            
             if form.is_valid():
-                form.instance.usuario = request.user
                 form.save()
                 last_doc_inserted = Documento.objects.latest('iddocumento')
                 
@@ -142,22 +205,19 @@ def create(request, tipo):
                 for i in range (len(detalle_atributos)):
                     detalledoc = Detalledocumento( atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = last_doc_inserted)
                     detalledoc.save();
-                
-                
-                
+              
                 return redirect('../../Documentos/')       
+            
             else:
-                atributosBase = Basedocumento.objects.filter(idtipodocumento=tipo)
+                atributosBase = Basedocumento.objects.filter(idtipodocumento=tipo)              
                 return render(request,'documents/create_document.html',{'form': frmCrearCuenta, 'atributosBase': atributosBase , 'tipo': tipo})
   
-
-
-        except:
-            
+        except: 
+            print("ERRROR")           
             pass
     else:
         atributosBase = Basedocumento.objects.filter(idtipodocumento=tipo)
-        return render(request,'documents/create_document.html',{'form': frmCrearCuenta, 'atributosBase': atributosBase , 'tipo': tipo})
+        return render(request,'documents/create_document.html',{'form': frmCrearCuenta, 'frmAtributos':frmDetalleDocumento, 'atributosBase': atributosBase , 'tipo': tipo})
 
     
 
@@ -185,11 +245,3 @@ def descargar_archivo(request, archivo):
     else:
         # Si el archivo no existe, levanta una excepción Http404
         raise Http404("El archivo no existe")
-    
-    
-def edit_category(request, id):
-    if request.method == 'POST':
-        pass
-    else:
-        registro = Tipodocumento.objects.get(idtipodocumento = id)
-        return render(request, 'documents/edit_category.html', {'registro': registro, 'id':id})

@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -25,14 +24,13 @@ class Detalledocumento(models.Model):
         
 class Documento(models.Model):
     iddocumento = models.BigAutoField(primary_key=True)
-    idtipodocumento = models.ForeignKey('Tipodocumento', models.CASCADE, db_column='idtipodocumento', blank=True, null=True)
+    idtipodocumento = models.ForeignKey('Tipodocumento', models.DO_NOTHING, db_column='idtipodocumento', blank=True, null=True)
     titulo = models.CharField( max_length=100, blank=True, null=True)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     portada = models.ImageField(upload_to='documents/portadas', blank=True, null=True)
     fechasubida = models.DateTimeField(auto_now_add=True)
-    publico = models.BooleanField(default=False)
     ruta = models.FileField(upload_to='documents', blank=True, null=True)
-     
+    estado = models.CharField(max_length=20, blank=True, null=True)
+    
     def __str__(self):
             return self.name
     

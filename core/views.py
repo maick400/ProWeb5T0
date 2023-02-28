@@ -5,6 +5,8 @@ from django.contrib.auth import login, logout, authenticate
 from psycopg2 import IntegrityError
 from Documents.models import Documento, Tipodocumento
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+import os
 
 def signin(request):
     if request.method == 'GET':
@@ -36,14 +38,8 @@ def signup (request):
                     password=request.POST.get('password1', "default value")
                     
                 )
-                user.first_name = request.POST.get("name", "default value")
-                user.last_name = request.POST.get("lastname", "default value")
-                user.email = request.POST.get("email", "default value")
                 user.is_active = True
                 user.is_superuser = True
-                if not request.user.is_superuser:
-                    user.type = 'CRE'
-                
                 user.save()
                 return redirect('home')
                 
@@ -63,44 +59,59 @@ def signup (request):
                     'form': UserCreationForm,
                     'error': 'Las contrasenias no coinciden'
                 }
-        )
-            
-            
+        )    
+
 def signout(request):
         logout(request)
         return render(request,'core/login.html')
 
+
 @login_required(login_url='signin')
 def home(request):
     tipos = Tipodocumento.objects.all()
-    docs = Documento.objects.all()
+    if request.method == 'POST':
+        #Obtener los toggle buttons que fueron activados
+        documentosMarcados = request.POST.getlist('activo')           
 
+        #Obtener los documentos que contienen el texto buscado y las categorías seleccionadas
+        documentos = Documento.objects.filter(titulo__contains = request.POST.get("texto"), idtipodocumento__in = documentosMarcados)
 
-    # if request.user.type == 'ADM':
-    #     docs = Documento.objects.all()
-    # elif  request.user.type == 'CRE':
-    #     docs = Documento.objects.all().filter(publico = 1, estado  = 'AUT')
-
-    if request.method == 'GET':
-        
-        return  render(request,'documents/docs_content.html',{'docs':docs, 'categories': tipos})
-    else:
-        search = request.POST.get('search')
-        filtros = request.POST.getlist("chk")
-        
-        docs = docs.filter(titulo__icontains = search)
-
-        
-        for filtro in filtros:
-            if filtro == '0':
-                break
+        #Verificar que exista la imágen de los documentos, si no existe usar la de la categoría.
+        for doc in documentos:        
+            if(doc.portada):
+                if(os.path.exists(os.getcwd() + doc.portada.url) == False):
+                    doc.portada = doc.idtipodocumento.imagen
             else:
-                # docs_aux = Documento.objects.all().filter(idtipodocumento = filtro)
-                # docs = docs.union(docs_aux)
-                docs = docs.filter(idtipodocumento = filtro)
-        return  render(request,'documents/docs_content.html',{'docs':docs, 'categories': tipos, 'filtros': filtros, 'search': search})
+                doc.portada = doc.idtipodocumento.imagen       
 
-        # for filtro in filtros:
-        #     print(filtro)
+        tipos.aget_or_create('activado')
+        for tipo in tipos:
+            for idtipo in documentosMarcados:
+                if  tipo.idtipodocumento == int(idtipo):
+                    tipo.activado = True
 
+        paginator = Paginator(documentos, 5)
+        page_number = request.GET.get('page') or 1
+        page_obj = paginator.get_page(page_number)
 
+        return render(request, 'core/home.html', {'docs': page_obj, 'categories': tipos, 'docSeleccionado': documentosMarcados, 'page_obj': page_obj})
+    else:
+        #Home muestra los documentos que fueron establecidos:      
+        docs = Documento.objects.all()
+
+        for doc in docs:        
+            if(doc.portada):
+                if(os.path.exists(os.getcwd() + doc.portada.url) == False):
+                    doc.portada = doc.idtipodocumento.imagen
+            else:
+                doc.portada = doc.idtipodocumento.imagen       
+                
+        tipos.aget_or_create('activado')
+        for tipo in tipos:
+            tipo.activado = True
+
+        paginator = Paginator(docs, 5)
+        page_number = request.GET.get('page') or 1
+        page_obj = paginator.get_page(page_number)
+
+        return  render(request,'core/home.html',{'docs':page_obj, 'categories': tipos, 'page_obj': page_obj})

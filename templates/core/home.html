@@ -4,62 +4,79 @@
 
 
   <div class="container-fluid p-2">
-    <div class="row">
+    <div class="row" style="width: 110%;">
 
       <div class="col col-2">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          
-          <form  method="POST" class="col-12" >
 
+          <form action=""  method="post" role="search">
             {% csrf_token %}
-            <input name="search" class="col-12 form-control me-2" type="search"  placeholder="Buscar" aria-label="Search">
-            <button class="col-12 btn btn-outline-success" type="submit">Buscar
+            <div class="class="d-flex"">
+            <input class="form-control me-2" type="search" name="texto"  placeholder="Buscar" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Buscar
             </button>
+          </div>
 
-            <div class="form-check form-switch">
-              <input value=0 name="chk" class="form-check-input" type="checkbox" role="cat" id="cat">
-              <label class="form-check-label" for="chk-{{cat.idtipodocumento}}">{{cat.tipo}}</label>
-              <li><hr class="divider"></li> 
-  
-            </div>
-  
-            {% for cat in  categories %}
-              
-                <div class="form-check form-switch">
-                  <input value={{cat.idtipodocumento}} name="chk" class="form-check-input" type="checkbox" role="cat" id="cat">
-                  <label class="form-check-label" for="chk-{{cat.idtipodocumento}}">{{cat.tipo}}</label>
-                  <li><hr class="divider"></li> 
-                </div>
-
-  
-            {% endfor %}
-
-       
-          </form>
-          
          
+          <div class="form-check form-switch mt-2">
+            <input checked class="form-check-input" type="checkbox" role="switch" id="chk-{{cat.idtipodocumento}}">
+            <label class="form-check-label" for="chk-{{cat.idtipodocumento}}">Todas</label>
+            <li><hr class="divider"></li>
+
+          </div>
+       
+          {% for cat in  categories %}         
+            <div class="form-check form-switch">
+              {% if cat.activado == True %}
+                <input checked name="activo" value="{{cat.idtipodocumento}}" class="form-check-input" type="checkbox" role="switch" id="chk-{{cat.idtipodocumento}}">
+              {% else %}
+                <input name="activo" value="{{cat.idtipodocumento}}" class="form-check-input" type="checkbox" role="switch" id="chk-{{cat.idtipodocumento}}">
+              {% endif %}
+              <label name="categoria" class="form-check-label" for="chk-{{cat.idtipodocumento}}">{{cat.tipo}}</label>
+
+              <li><hr class="divider"></li>
+              <input type="hidden" name="idCategoria" value="{{cat.idtipodocumento}}" />
+            </div>
+          {% endfor %}
+        </form>
          
         </ul>
 
       </div>
 
-
-      {% block docscontent %}
-      
-      
-      {% endblock docscontent %}
-      
-
-
-
-
-
-      <!-- -->
-
-
-
+      <div class="col col-9">
+        <div class="col col-8 "></div>
+        <div class="row" style="margin-top: 1%;">
+          
+          <div class="row">
+            {% for item in docs %}
+            <div class="col order-last">
+                <div class="containerima" style="max-width: 200; position: relative; margin-top: 4%; align-items: center;"
+                  aria-hidden="true">     
+                  <a>
+                    <img class="img-responsive" width="200" height="275" src="{{item.portada.url}}">
+                    <div class="content " style="width:100%;">
+                      <p>
+                        <a class="titulos-libros"  href="/Documentos/details/{{item.iddocumento}}"
+                          style=" color: #dfdfdf;  font-size: 20px; font-weight: 900; ">{{item.titulo}}                        
+                        </a>
+                      </p>
+                  </div>
+                </a>          
+                </div>             
+            </div>
+            
+            {% endfor %}
+          </div>
+          
+        </div>
+          
+         
+      </div>
     </div>
   </div>
 </div>
+
+{% include "documents/pagination_book.html" %}
 
 {% endblock content %}

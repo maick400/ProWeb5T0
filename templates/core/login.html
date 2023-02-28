@@ -62,31 +62,20 @@
             
                        <div class="mb-3">
                            <label for="password">Contrasenia: </label>
-                           <input type="password" name="password1" id="password"
+                           <input type="password1" name="password1" id="password"
                                   class="form-control" placeholder="Escriba su contrasena">
                        </div>
 
                        
 
-                       
-
 
                        <div class="col-12 text-end py-2">
-                            <a href=" {% url 'signup' %} " class="btn btn-outline-dark">Registrarse</a>
+                            <a href=" {% url 'signup' %} " class="btn btn-outline-dark">Iniciar session</a>
                         
                             <button type="submit" class="btn btn-success">
                                 Iniciar Sesion
                             </button>
                        </div>
-
-                       <div class="col-12 text-end">
-
-                        <a href="{% url 'social:begin' 'facebook' %}" class="fb btn col-12" style="background-color:#0078f4;">
-                         <i class="fa fa-facebook fa-fw"></i> Iniciar sesión con Facebook
-                       </a>
-
-                      </div>
-
                        
             
                 </form>
@@ -100,12 +89,5 @@
     </div>
 </body>
 </html>
-  {% comment %} <h2>Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form>
-    <br>
-    <p><strong>-- OR --</strong></p>
-    <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a> {% endcomment %}
+
+
