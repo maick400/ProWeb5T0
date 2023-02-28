@@ -75,53 +75,59 @@ def signout(request):
 
 @login_required(login_url='signin')
 def home(request):
-    tipos = Tipodocumento.objects.all()
-    if request.method == 'POST':
-        #Obtener los toggle buttons que fueron activados
-        documentosMarcados = request.POST.getlist('activo')           
+      
+    tipos = Tipodocumento.objects.all() 
+    #Home muestra los documentos que fueron establecidos:      
+    docs = Documento.objects.all()
 
-        #Obtener los documentos que contienen el texto buscado y las categorías seleccionadas
-        documentos = Documento.objects.filter(titulo__contains = request.POST.get("texto"), idtipodocumento__in = documentosMarcados)
+    searchKey = request.POST.get("key", "searchKey")
+    
+    for doc in docs:        
+        if(doc.portada):
+            if(os.path.exists(os.getcwd() + doc.portada.url) == False):
+                doc.portada = doc.idtipodocumento.imagen
+        else:
+            doc.portada = doc.idtipodocumento.imagen
+            
+    texto = request.GET.get('texto')
 
-        #Verificar que exista la imágen de los documentos, si no existe usar la de la categoría.
-        for doc in documentos:        
-            if(doc.portada):
-                if(os.path.exists(os.getcwd() + doc.portada.url) == False):
-                    doc.portada = doc.idtipodocumento.imagen
-            else:
-                doc.portada = doc.idtipodocumento.imagen       
+    documentosMarcados = request.GET.getlist('activo') 
+    for tipo in tipos:
+        tipo.activado = True
 
-        tipos.aget_or_create('activado')
+    if documentosMarcados:
         for tipo in tipos:
+            encontrado = False
             for idtipo in documentosMarcados:
                 if  tipo.idtipodocumento == int(idtipo):
-                    tipo.activado = True
-
-        paginator = Paginator(documentos, 5)
-        page_number = request.GET.get('page') or 1
-        page_obj = paginator.get_page(page_number)
-
-        return render(request, 'core/home.html', {'docs': page_obj, 'categories': tipos, 'docSeleccionado': documentosMarcados, 'page_obj': page_obj})
-    else:
-        #Home muestra los documentos que fueron establecidos:      
-        docs = Documento.objects.all()
-
-        for doc in docs:        
-            if(doc.portada):
-                if(os.path.exists(os.getcwd() + doc.portada.url) == False):
-                    doc.portada = doc.idtipodocumento.imagen
-            else:
-                doc.portada = doc.idtipodocumento.imagen       
-                
-        tipos.aget_or_create('activado')
+                    encontrado = True
+            tipo.activado = encontrado            
+    
+    searchKey = request.GET.get("key", "searchKey")
+    if not documentosMarcados:
         for tipo in tipos:
-            tipo.activado = True
+            documentosMarcados.append(tipo.idtipodocumento)
+    
+    if texto != None:
+        docs = docs.filter(titulo__contains = texto, idtipodocumento__in = documentosMarcados)
+    else:
+        texto = ""
+        docs = docs.filter(titulo__contains = "", idtipodocumento__in = documentosMarcados)
 
-        paginator = Paginator(docs, 5)
-        page_number = request.GET.get('page') or 1
-        page_obj = paginator.get_page(page_number)
+    #Verificar que exista la imágen de los documentos, si no existe usar la de la categoría.
+    for doc in docs:
+        if(doc.portada):
+            if(os.path.exists(os.getcwd() + doc.portada.url) == False):
+                doc.portada = doc.idtipodocumento.imagen
+        else:
+            doc.portada = doc.idtipodocumento.imagen 
 
-        return  render(request,'core/home.html',{'docs':page_obj, 'categories': tipos, 'page_obj': page_obj})
+    paginator = Paginator(docs, 5)
+    page_number = request.GET.get('page') or 1
+    page_obj = paginator.get_page(page_number)
+
+    return  render(request,'core/home.html',{'texto':texto, 'docs':page_obj, 'categories': tipos, 'page_obj': page_obj, 'searchKey': searchKey})
+
 
 def users (request): 
     if request.user.is_superuser:

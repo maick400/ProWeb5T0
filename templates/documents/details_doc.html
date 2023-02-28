@@ -1,12 +1,7 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-
 {% block content %}
-
-
-
-
 
 <form action="#" class="border p-4 form">
     <div class="container" style="margin-top: 1%;">
@@ -152,6 +147,22 @@
                                         </div>
                                        
                                         {% endfor %}
+
+                                        {% for i in  columnsToAdd %}    
+                                        <p>{{i}}</p>                                     
+                                        {% for j in i %} 
+                                        <p>{{j}}</p>
+                                        {% if page_obj.number ==  page_obj.paginator.num_pages %}                                     
+                                        <div class="col order-last">
+                                            <!Libro 1>
+                                                <div class="containerima"
+                                                    style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
+                                                    aria-hidden="true">
+                                                </div>                                                    
+                                        </div>     
+                                        {% endif %}                                            
+                                        {% endfor %}  
+                                        {% endfor %}      
                                     </div>
                                     <!Los activos>
                             </div>

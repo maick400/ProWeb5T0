@@ -5,20 +5,22 @@
     <div class="col col-sm-2">
       <!NAV izquierdo>
         <ul class="navbar-nav">
-          <form action="" method="post" role="search">
+          <form action="" method="get" role="search">
             {% csrf_token %}
             <div class="class=" d-flex"">
-              <input class="form-control me-2" type="search" name="texto" placeholder="Buscar" aria-label="Search" style="margin-top: 10px; margin-left: 10px; margin-bottom: 5%;"">
-              <button class="btn btn-outline-success" type="submit" style="margin-left: 10px; margin-bottom: 5%;">Buscar
+              <input class="form-control me-2" type="search" name="texto" placeholder="Buscar" value="{{texto}}" aria-label="Search"
+                style="margin-top: 10px; margin-left: 10px; margin-bottom: 5%;"">
+              <button class=" btn btn-outline-success" type="submit"
+                style="margin-left: 10px; margin-bottom: 5%;">Buscar
               </button>
             </div>
             <div class="form-check form-switch mt-1" style="margin-left: 7%; margin-bottom: 5%;">
-              <li>      
-                <input checked class="form-check-input" type="checkbox" role="switch" id="chk-{{cat.idtipodocumento}}"  >   
+              <li>
+                <input checked class="form-check-input" type="checkbox" role="switch" id="chk-{{cat.idtipodocumento}}">
                 <label class="form-check-label" for="chk-{{cat.idtipodocumento}}">Todas</label>
                 <!hr class="divider">
               </li>
-              
+
             </div>
             {% for cat in categories %}
             <div class="form-check form-switch" style="margin-left: 7%; margin-bottom: 5%;">
@@ -56,21 +58,31 @@
                           style=" color: #dfdfdf;  font-size: 20px; font-weight: 900; ">{{item.titulo}}</a>
                       </p>
                     </div>
-                  </div>
+                 </div>                 
               </div>
               {% endfor %}
               <!Hasta aqui generar>
+                {% for item in div_agregar %}
+                {% for i in item %}
+                <div class="col ">
+                  <!Libro 1>
+                    <div class="containerima" style="max-width: 300px; position: relative; margin-top: 4%;"
+                      aria-hidden="true">
+                     
+                   </div>                 
+                </div>
+                {% endfor %}
+                {% endfor %}
+           
           </div>
         </div>
       </form>
     </div>
 
 
-    
+
   </div>
-  </div>
-  </div>
-  </div>
+
   {% include "documents/pagination_book.html" %}
   <footer class="text-white"
     style="margin-top: 20px; background-color: rgb(1, 109, 6) ; text-align: center; padding: 2%;">

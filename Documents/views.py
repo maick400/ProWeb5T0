@@ -144,9 +144,9 @@ def choose_document(request):
 
 @login_required  
 def get_document(request, id):    
-    if request.method == 'POST':
+ if request.method == 'POST':
         pass
-    else:
+ else:
         registro = Documento.objects.get(iddocumento = id)
         atributos = Detalledocumento.objects.filter(iddocumento = id)
         tipodoc = Tipodocumento.objects.all()
@@ -180,9 +180,11 @@ def get_document(request, id):
         page_number = request.GET.get('page') or 1
         page_obj = paginator.get_page(page_number)
         
-        columnsToAdd = []
-       
-        columnsToAdd.append(range((len(docsAlt) + 1) % 3))
+        columnsToAdd = []       
+        if len(docsAlt) + 1  % 2 == True:
+            columnsToAdd.append(range(2))
+        else:
+            columnsToAdd.append(range(1))
             
 
         return render(request,'documents/details_doc.html', {'registro': registro, 'atributos': atributos,'tipos': tipodoc, 'docsAlt': page_obj, 'page_obj': page_obj, 'columnsToAdd': columnsToAdd})   
