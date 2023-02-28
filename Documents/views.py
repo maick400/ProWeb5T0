@@ -139,6 +139,10 @@ def choose_document(request):
         return render(request,'documents/choose_document_type.html', {'tipos': tipos})
     
 @login_required  
+
+@login_required  
+
+@login_required  
 def get_document(request, id):    
     if request.method == 'POST':
         pass
@@ -160,7 +164,8 @@ def get_document(request, id):
         #Obtener otros documentos:
         docsAlt = Documento.objects.all().order_by("iddocumento")
         cadena = ""
-        docsAlt.aget_or_create('columnNumber')
+        docsAlt.aget_or_create('columnNumberAdd')
+        
         for doc in docsAlt:                        
                 doc.columnNumber = (doc.iddocumento % 3) + i
                 if(doc.portada):
@@ -169,13 +174,18 @@ def get_document(request, id):
                 else:
                     doc.portada = doc.idtipodocumento.imagen
                 i = i + 1
-                   
+               
 
         paginator = Paginator(docsAlt, 3)
         page_number = request.GET.get('page') or 1
         page_obj = paginator.get_page(page_number)
+        
+        columnsToAdd = []
+       
+        columnsToAdd.append(range((len(docsAlt) + 1) % 3))
+            
 
-        return render(request,'documents/details_doc.html', {'registro': registro, 'atributos': atributos,'tipos': tipodoc, 'docsAlt': page_obj, 'page_obj': page_obj, 'cadena': cadena})  
+        return render(request,'documents/details_doc.html', {'registro': registro, 'atributos': atributos,'tipos': tipodoc, 'docsAlt': page_obj, 'page_obj': page_obj, 'columnsToAdd': columnsToAdd})   
     
        
 
@@ -196,14 +206,6 @@ def createCategory(request):
             for i in range (len(detalle_atributos_Nuevo)):
                 base_doc = Basedocumento(idtipodocumento = last_cat, atributo = detalle_atributos_Nuevo[i], tipodato = detalle_tipo_Nuevo[i])
                 base_doc.save()
-
-                
-            
-            
-            
-            
-            
-            
             frm.save()
             return redirect('documentos:documentos')
         else :
