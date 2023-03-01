@@ -118,10 +118,8 @@ def edit(request, codigo):
         valor_atributos_Nuevo = request.POST.getlist('valorNew')
 
         for i in range (len(ids_detalles)):           
-            detalleEditar = Detalledocumento(id=ids_detalles[i], atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = documentoEdit)
-            
+            detalleEditar = Detalledocumento(id=ids_detalles[i], atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = documentoEdit)            
             ids_detallesOriginal.remove(ids_detalles[i]);
-            detalleEditar.save();
         
         for i in range (len(valor_atributos_Nuevo)):           
             detalleEditar = Detalledocumento( atributo=detalle_atributos_Nuevo[i], tipodato = detalle_tipo_Nuevo[i], valor = valor_atributos_Nuevo[i], iddocumento = documentoEdit )
@@ -191,8 +189,7 @@ def get_document(request, id):
             
 
         return render(request,'documents/details_doc.html', {'registro': registro, 'atributos': atributos,'tipos': tipodoc, 'docsAlt': page_obj, 'page_obj': page_obj, 'columnsToAdd': columnsToAdd})   
-    
-       
+      
 
 def createCategory(request):    
     if request.method == 'POST':
@@ -226,20 +223,45 @@ def createCategory(request):
     
 def getCategories(request):
     if(request.method == 'GET'):        
-        categories =Tipodocumento.objects.all();
+        categories =Tipodocumento.objects.all()
+
         return render(request,'documents/documentsType.html', {'categories': categories})
     
-def editCategory(request, id):
+
+    
+def editCategory(request, id):   
+    tiposAtributos = TIPOS_ATRIBUTO
     if request.method == 'POST':
         categories = Tipodocumento.objects.get(idtipodocumento = id)
-        
+        detalleCategoria = Basedocumento.objects.filter(idtipodocumento = id)
+
+        tipo_dato_modificado = request.POST.getlist("tipoDatoModificado")
+        ids_detalles = request.POST.getlist("idsDetalle")
+        detalle_atributos = request.POST.getlist('atributoModificado')
+        ids_detallesOriginal = request.POST.getlist('idsDetalleOriginal')
+
+        atributosNew = request.POST.getlist('atributoNew')
+        tipoDatoNew = request.POST.getlist("tipoDatoNew")
+
+        for i in range (len(ids_detalles)):           
+            detalleEditar = Basedocumento(atributo=detalle_atributos[i], tipodato = tipo_dato_modificado[i], idtipodocumento = categories)            
+            ids_detallesOriginal.remove(ids_detalles[i]);       
+
+
+        for i in range (len(tipoDatoNew)):
+            detalleCrear = Basedocumento(atributo = atributosNew[i], tipodato = tipoDatoNew[i], idtipodocumento = categories)
+            detalleCrear.save()
+
+        for i in range  (len(ids_detallesOriginal)):
+            detalleEliminar = Basedocumento.objects.get(id = ids_detallesOriginal[i]);
+            detalleEliminar.delete();
+            
+
         categories.descripcion = request.POST.get("descripcion")
         categories.tipo = request.POST.get("tipo")
-        categories.tipo = request.POST.get("tipo")
-        if(request.POST.get("in_ruta") == ''):
-            print("No Válido")
-        else:
-            print("Válido")
+
+        if(request.POST.get("in_ruta") == '' or request.POST.get("in_ruta") is None):
+            return render(request,'documents/documentsType.html', {'categories': Tipodocumento.objects.all()})    
 
         categories.imagen = request.FILES["in_ruta"]
 
@@ -247,17 +269,16 @@ def editCategory(request, id):
         return render(request,'documents/documentsType.html', {'categories': Tipodocumento.objects.all()})    
     else:
         categories = Tipodocumento.objects.get(idtipodocumento = id)
-        return render(request,'documents/edit_category.html', {'categories': categories})
+        detalleCategoria = Basedocumento.objects.filter(idtipodocumento = id)
+        return render(request,'documents/edit_category.html', {'frmDetalleDocumento': frmDetalleDocumento, 'categories': categories, 'detallesCategoria': detalleCategoria, 'tiposAtributo': tiposAtributos})
 
-    
-
-
-def create(request, tipo): 
-    
+def create(request, tipo):     
     if request.method == 'POST':    
         try:                       
             form = frmCrearCuenta(request.POST, request.FILES)
-            
+            print("asdasdsds", request.POST.get("ruta"))
+            if request.POST.get("ruta") == '':
+                return redirect('../../Documentos/') 
             if form.is_valid():  
                 form.instance.usuario = request.user
                 form.save()
@@ -284,7 +305,7 @@ def create(request, tipo):
             
             else:
                 atributosBase = Basedocumento.objects.filter(idtipodocumento=tipo)              
-                return render(request,'documents/create_document.html',{'form': frmCrearCuenta, 'atributosBase': atributosBase , 'tipo': tipo})
+                return render(request,'documents/create_document.html',{'form': frmCrearCuenta, 'frmAtributos':frmDetalleDocumento, 'atributosBase': atributosBase , 'tipo': tipo})
   
         except: 
             print("ERRROR")           

@@ -78,9 +78,6 @@
         </div>
       </form>
     </div>
-
-
-
   </div>
 
   {% include "documents/pagination_book.html" %}
@@ -88,4 +85,13 @@
     style="margin-top: 20px; background-color: rgb(1, 109, 6) ; text-align: center; padding: 2%;">
     Copyright ©
   </footer>
+
+  <script>
+    function onChangeSelectAll(e){
+      const toggleAll =  e.target
+      if(toggleAll.checked == true){
+        
+      }
+    }    
+  </script>
   {% endblock content %}

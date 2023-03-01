@@ -93,7 +93,7 @@
                                 <div  class = "container" style="visibility: hidden; display:none;">       
                                    
                                     <label class = "form-label fw-bold">Tipo:</label>
-                                    <select name="tipoModificado" class="form-select">                                        
+                                    <select name="tipoModificado" class="form-select" onchange="onChangeTypeData(event)">                                        
                                     {% for atr in tAtributos %}
                                         {% if atr.0 == item.tipodato %}                                            
                                         <option value="{{atr.0}}" selected>
@@ -107,7 +107,7 @@
                                     {% endfor %}
                                     </select>
                                     <label class = "form-label fw-bold">Valor:</label>
-                                    <input name ="valorModificado" type="text"  class = "form-control"value="{{item.valor}}" />
+                                    <input name ="valorModificado" type="{{item.tipodato}}" class = "form-control"value="{{item.valor}}" />
                                 </div>
                                 <div class="border border-top-0 border-left-0 border-rigth-0 mt-2"></div> 
                             </div>
@@ -142,7 +142,14 @@
             function deleteAttribute(e){
             var buttonClicked = e.target;
             buttonClicked.parentElement.parentElement.remove();
-        }
+            }
+            
+            function onChangeTypeData(e){
+                var changeData = e.target
+
+                e.target.parentElement.children[3].type = changeData.value
+            }
+        
         </script>
     </div>
   </div> 

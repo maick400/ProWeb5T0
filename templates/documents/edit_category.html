@@ -10,7 +10,7 @@
     <form action="" method="post" enctype="multipart/form-data">
 
         {% csrf_token %}
-        
+        {{frmDetalleDocumento}}
       <div class="col">
         <label for="id_tipo">Tipo de Documento:</label>
 
@@ -55,8 +55,188 @@
           <button type="submit" class="btn btn-success">Modificar</button>
         </div>
       </div>
+
+      <div class = "container border border-black border-2 rounded p-3" style = "width: 97%;">
+        {% for item in detallesCategoria  %}                            
+            <input name="idsDetalleOriginal" type="hidden" value="{{item.id}}"/>
+            <div class="atributoContenedor">                                
+                <div class = "container">
+                    <input name="idsDetalle" type="hidden" value="{{item.id}}"/>
+                    <label class = "form-label fw-bold">Atributo:</label>      
+
+                    <input class="btn btn-outline-info justify-content-between" type="button" value = "-" onclick=" deleteAttribute(event);
+                            function deleteAttribute(e){
+                            var buttonClicked = e.target;
+                            buttonClicked.parentElement.parentElement.remove();
+                        }
+                    " style="float:right"/>
+
+                    <input class="btn btn-outline-info justify-content-between" type="button" value = "^" onclick="showAndHide(event)" style="float:right"/>
+                    <input name ="atributoModificado" type="text" class = "form-control" value="{{item.atributo}}" />
+                </div>    
+                <div class="container" style="visibility: hidden; display:none;">
+                  <label class="form-label">Tipo de dato:</label>
+                  <select name="tipoDatoModificado" class="form-select" onchange="onChangeTypeData(event)">
+                  {% for tAtributo in tiposAtributo %}                  
+                    {% if tAtributo.0 == item.tipodato %}
+                      <option value="{{tAtributo.0}}" class="form-control" selected>
+                        {{tAtributo.1}}
+                      </option>
+                    {% else %}
+                      <option  value="{{tAtributo.0}}" class="form-control" >
+                        {{tAtributo.1}}
+                      </option>
+                    {% endif %}
+                  {% endfor %}                  
+                </select>
+                  <label class="form-label">Previsualización:</label>
+                  <input class="form-control" type="{{item.tipodato}}" readonly="true" />
+                </div>                 
+            </div>          
+            <br>
+        {% endfor %}
+
+        <div class = "d-flex justify-content-between container">
+          <label class="form-label fw-bold">Nuevos atributos</label>  
+          <div class="text-end">
+              <input class="btn btn-outline-info" type="button" value = "+" onclick="clicAddAttribute(event)"/>
+          </div>    
+      </div>
+      <br> 
+      <div id="nuevosAtributos" class = "container border border-black border-2 rounded p-3" style = "width: 95%;">
+
+      </div>  
+    </div>    
     </form>
   </div>
 </div>
+<script>
+function clicAddAttribute(e){
+    // create a new div element
+    const contenedor = document.getElementById("nuevosAtributos");
+  
+    const newDiv = document.createElement("div");
+    newDiv.id = "atributoContenedor";
+
+    const newlabel = document.createElement("label");
+    newlabel.className = "form-label fw-bold";
+    newlabel.textContent = "Atributo";        
+
+    const newInput = document.createElement("input");
+    newInput.className = "form-control";
+    newInput.type="text";
+    newInput.name="atributoNew";
+
+    const labeltipoDato = document.createElement("label");
+    labeltipoDato.className = "form-label fw-bold";
+    labeltipoDato.textContent = "Tipo de dato";        
+    
+    const inputTipoDato = document.createElement("input");
+    inputTipoDato.className = "form-control";
+    inputTipoDato.type="text";
+    inputTipoDato.name="tipoDatoNew";
+
+    const atributosDisponibles = document.getElementById("id_tipodato");       
+    const selectTipoDato = atributosDisponibles.cloneNode(true);
+    selectTipoDato.removeAttribute("hidden");
+    selectTipoDato.name = "tipoDatoNew";
+
+    selectTipoDato.onchange = ('onChangeTypeData', () => onChangeTypeData(event))
+    const newlabelValue = document.createElement("label");
+    newlabelValue.className = "form-label fw-bold";
+    newlabelValue.textContent = "Previsualización:";        
+
+    const valueInput = document.createElement("input");
+    valueInput.className = "form-control";
+    valueInput.type= "text";
+    valueInput.name= "valorNew";
+
+    const divBarraNuevoAttribute = document.createElement("div");
+   
+    divBarraNuevoAttribute.id = "divBarraAtributo";
+
+    const inputDeleteAttribute = document.createElement("input");
+    inputDeleteAttribute.type = "button";
+    inputDeleteAttribute.id = "deleteAttribute";
+    inputDeleteAttribute.value = " -";
+    inputDeleteAttribute.className = "btn btn-outline-info justify-content-between";
+    inputDeleteAttribute.style = "float: right";
+
+    inputDeleteAttribute.onclick = ('onClick',() => deleteAttribute(event))
+
+    const minimizeAttribute  = document.createElement("input");
+    minimizeAttribute.type = "button";
+    minimizeAttribute.id = "minimizeAttribute";
+    minimizeAttribute.className = "btn btn-outline-info justify-content-between";
+    minimizeAttribute.style = "float: right";
+    minimizeAttribute.value = "^";
+    minimizeAttribute.onclick = ('onClick',() => showAndHide(event));
+
+    //contenedor.appendChild(newlabel);
+    divBarraNuevoAttribute.style.display = "block";
+
+    divBarraNuevoAttribute.appendChild(newlabel);
+    divBarraNuevoAttribute.appendChild(inputDeleteAttribute);
+    divBarraNuevoAttribute.appendChild(minimizeAttribute);
+    divBarraNuevoAttribute.appendChild(document.createElement("br"));
+    divBarraNuevoAttribute.appendChild(newInput);
+    
+
+    const divContentAttribute = document.createElement("div");        
+    divContentAttribute.id = "divBarraAtributo";
+
+    divContentAttribute.appendChild(labeltipoDato);
+    //divContentAttribute.appendChild(inputTipoDato);
+    divContentAttribute.appendChild(selectTipoDato);
+
+    divContentAttribute.appendChild(newlabelValue);
+    divContentAttribute.appendChild(valueInput);
+    valueInput.readOnly = true;
+    divContentAttribute.style.visibility = "visible";
+
+    newDiv.appendChild(divBarraNuevoAttribute);
+    newDiv.appendChild(divContentAttribute);
+    newDiv.style.visibility = "visible";
+    /*newDiv.appendChild(newInput);
+
+    newDiv.appendChild(labeltipoDato);
+    newDiv.appendChild(inputTipoDato);
+
+    newDiv.appendChild(newlabelValue);
+    newDiv.appendChild(valueInput);*/
+
+    contenedor.appendChild(newDiv);
+}
+
+function deleteAttribute(e){
+   var buttonClicked = e.target;
+   buttonClicked.parentElement.parentElement.remove();
+}
+
+function showAndHide(e){        
+   var buttonClicked = e.target;
+   var divElement = buttonClicked.parentElement;
+   
+   //minimizeAttribute
+   var valorelem1 = document.getElementById('minimizeAttribute');
+   if(divElement.parentElement.children[1].style.visibility == "visible"){
+       divElement.parentElement.children[1].style.visibility = "hidden";
+       divElement.parentElement.children[1].style.display = "none";
+       buttonClicked.value= '˅';
+   }
+   else
+   { 
+       divElement.parentElement.children[1].style.visibility = "visible";
+       divElement.parentElement.children[1].style.display = "block";
+       buttonClicked.value= '˄';
+   }
+  
+}
+function onChangeTypeData(e){
+  var changeData = e.target
+  e.target.parentElement.children[3].type = changeData.value
+}
+</script>
+
 
 {% endblock content %}

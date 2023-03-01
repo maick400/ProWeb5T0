@@ -27,6 +27,7 @@ function clicAddAttribute(e){
     const selectTipoDato = atributosDisponibles.cloneNode(true);
     selectTipoDato.removeAttribute("hidden");
     selectTipoDato.name = "tipoDatoNew";
+    selectTipoDato.onchange = ('onchange', () => onChangeTypeData(event))
 
 
     const newlabelValue = document.createElement("label");
@@ -117,4 +118,9 @@ function showAndHide(e){
        buttonClicked.value= '˄';
    }
   
+}   
+function onChangeTypeData(e){
+    var changeData = e.target
+
+    e.target.parentElement.children[3].type = changeData.value
 }

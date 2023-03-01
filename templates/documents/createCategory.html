@@ -37,7 +37,7 @@
   <script>
     function clicAddAttribute(){
           // create a new div element
-          const contenedor = document.getElementById("atributoContenedor");
+       contenedor = document.getElementById("atributoContenedor");
        
        const newDiv = document.createElement("div");
        newDiv.id = "atributoContenedor";
@@ -131,17 +131,38 @@
        newDiv.appendChild(divBarraNuevoAttribute);
        newDiv.appendChild(divContentAttribute);
        newDiv.style.visibility = "visible";
-       /*newDiv.appendChild(newInput);
-
-       newDiv.appendChild(labeltipoDato);
-       newDiv.appendChild(inputTipoDato);
-
-       newDiv.appendChild(newlabelValue);
-       newDiv.appendChild(valueInput);*/
 
        contenedor.appendChild(newDiv);
     }
+
     
+    
+function deleteAttribute(e){
+   var buttonClicked = e.target;
+   buttonClicked.parentElement.parentElement.remove();
+}
+
+function showAndHide(e){        
+   var buttonClicked = e.target;
+   var divElement = buttonClicked.parentElement;
+   
+   //minimizeAttribute
+   var valorelem1 = document.getElementById('minimizeAttribute');
+   if(divElement.parentElement.children[1].style.visibility == "visible"){
+       divElement.parentElement.children[1].style.visibility = "hidden";
+       divElement.parentElement.children[1].style.display = "none";
+       buttonClicked.value= '˅';
+       valorelem1.value= '˅';
+   }
+   else
+   { 
+       divElement.parentElement.children[1].style.visibility = "visible";
+       divElement.parentElement.children[1].style.display = "block";
+       buttonClicked.value= '˄';
+       valorelem1.value= '˄';
+   }  
+}
+
 </script>
 {% endblock content %}
 
