@@ -149,9 +149,7 @@
                                         {% endfor %}
 
                                         {% for i in  columnsToAdd %}    
-                                        <p>{{i}}</p>                                     
                                         {% for j in i %} 
-                                        <p>{{j}}</p>
                                         {% if page_obj.number ==  page_obj.paginator.num_pages %}                                     
                                         <div class="col order-last">
                                             <!Libro 1>
@@ -186,7 +184,7 @@
                     {% endif %}
                 </div>
                 <div class="col">
-                    <h5 style="text-align: center;">Numero de articulos</h5>
+                    <h5 style="text-align: center;">Páginas: {{page_obj.number}}</h5>
                 </div>
                 <div class="col">
                     {% if page_obj.number < page_obj.next_page_number %}

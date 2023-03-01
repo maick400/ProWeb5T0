@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+{% block title %}Editar usuario{% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid ">
+    <label class="label">Nombre:</label>
+    <input class="form-control" value="{{user.first_name}}" />
+    
+    <label class="label">Apellidos:</label>
+    <input class="form-control" value="{{user.last_name}}" />
+
+    <label class="label">Email:</label>
+    <input class="form-control" value="{{user.email}}" />
+
+    <label class="label">Usuario:</label>
+    <input class="form-control" value="{{user.username}}" />
+
+    <label class="label">Contraseña:</label>
+    <div class="form-group">
+        <div class="input-group">
+            <input class="form-control" type="password" value="{{user.password}}" id="password" />
+            <input class="input-group-text" type="button" id="seePassword" onclick="seePassword()" />
+        </div>
+    </div>
+ </div>
+
+ <script>
+    function seePassword(){
+        const btnPassword = document.getElementById('seePassword')
+        const textPassword = document.getElementById('password')
+        
+        if(textPassword.type == "password"){
+            textPassword.type = "text"
+        }
+        else{
+            textPassword.type = "password"
+        }
+    }
+</script>
+{% endblock %}

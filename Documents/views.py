@@ -67,15 +67,18 @@ def index(request):
         else:
             doc.portada = doc.idtipodocumento.imagen 
 
-    paginator = Paginator(docs, 5)
+    max_elements_per_page = 6
+
+    paginator = Paginator(docs, max_elements_per_page)
     page_number = request.GET.get('page') or 1
     page_obj = paginator.get_page(page_number)
 
     div_agregar= []
-    if(len(docs) + 1 % 2 == True):
-        div_agregar.append(range(0))
-    else:
-        div_agregar.append(range(1))
+    if max_elements_per_page % 2 != 0:
+        max_elements_per_page = max_elements_per_page + 2
+        
+    div_agregar.append(range(max_elements_per_page - len(docs)))
+    
     return  render(request,'core/home.html',{'div_agregar': div_agregar, 'texto':texto, 'docs':page_obj, 'categories': tipos, 'page_obj': page_obj, 'searchKey': searchKey})
 
 
@@ -144,10 +147,6 @@ def choose_document(request):
         return render(request,'documents/choose_document_type.html', {'tipos': tipos})
     
 @login_required  
-
-@login_required  
-
-@login_required  
 def get_document(request, id):    
  if request.method == 'POST':
         pass
@@ -156,14 +155,14 @@ def get_document(request, id):
         atributos = Detalledocumento.objects.filter(iddocumento = id)
         tipodoc = Tipodocumento.objects.all()
 
-        #Verificar que exista la portada para el registro seleccionado
+    
         if(registro.portada):
-            #Verificar que exista el archivo en la carpeta donde se almacenan las rutas
-            #Si no existe el imagen para la portada del documento asignar la de la categoría
             if(os.path.exists(os.getcwd() + registro.portada.url) == False):
                 registro.portada = registro.idtipodocumento.imagen
         else:
-            registro.portada = registro.idtipodocumento.imagen     
+            registro.portada = registro.idtipodocumento.imagen
+        if registro.portada is None:
+            registro.portada = registro.idtipodocumento.imagen
 
         i = 0;
         #Obtener otros documentos:
@@ -172,13 +171,12 @@ def get_document(request, id):
         docsAlt.aget_or_create('columnNumberAdd')
         
         for doc in docsAlt:                        
-                doc.columnNumber = (doc.iddocumento % 3) + i
-                if(doc.portada):
-                     if(os.path.exists(os.getcwd() + doc.portada.url) == False):
-                        doc.portada = doc.idtipodocumento.imagen
-                else:
+            doc.columnNumber = (doc.iddocumento % 3) + i
+            if(doc.portada):
+                if(os.path.exists(os.getcwd() + doc.portada.url) == False):
                     doc.portada = doc.idtipodocumento.imagen
-                i = i + 1
+            else:
+                doc.portada = doc.idtipodocumento.imagen
                
 
         paginator = Paginator(docsAlt, 3)
@@ -186,7 +184,7 @@ def get_document(request, id):
         page_obj = paginator.get_page(page_number)
         
         columnsToAdd = []       
-        if len(docsAlt) + 1  % 2 == True:
+        if len(docsAlt)  % 2 == True:
             columnsToAdd.append(range(2))
         else:
             columnsToAdd.append(range(1))
@@ -232,8 +230,24 @@ def getCategories(request):
         return render(request,'documents/documentsType.html', {'categories': categories})
     
 def editCategory(request, id):
-    categories = Tipodocumento.objects.get(idtipodocumento = id)
-    return render(request,'documents/edit_category.html', {'categories': categories})
+    if request.method == 'POST':
+        categories = Tipodocumento.objects.get(idtipodocumento = id)
+        
+        categories.descripcion = request.POST.get("descripcion")
+        categories.tipo = request.POST.get("tipo")
+        categories.tipo = request.POST.get("tipo")
+        if(request.POST.get("in_ruta") == ''):
+            print("No Válido")
+        else:
+            print("Válido")
+
+        categories.imagen = request.FILES["in_ruta"]
+
+        categories.save()
+        return render(request,'documents/documentsType.html', {'categories': Tipodocumento.objects.all()})    
+    else:
+        categories = Tipodocumento.objects.get(idtipodocumento = id)
+        return render(request,'documents/edit_category.html', {'categories': categories})
 
     
 
@@ -244,7 +258,7 @@ def create(request, tipo):
         try:                       
             form = frmCrearCuenta(request.POST, request.FILES)
             
-            if form.is_valid():                
+            if form.is_valid():  
                 form.instance.usuario = request.user
                 form.save()
 

@@ -122,15 +122,16 @@ def home(request):
         else:
             doc.portada = doc.idtipodocumento.imagen 
 
-    paginator = Paginator(docs, 5)
+    max_elements_per_page = 6
+
+    paginator = Paginator(docs, max_elements_per_page)
     page_number = request.GET.get('page') or 1
     page_obj = paginator.get_page(page_number)
 
     div_agregar= []
-    if(len(docs) + 1 % 2 == True):
-        div_agregar.append(range(0))
-    else:
-        div_agregar.append(range(1))
+    if max_elements_per_page % 2 != 0:
+        max_elements_per_page = max_elements_per_page + 2
+        
     return  render(request,'core/home.html',{'div_agregar': div_agregar, 'texto':texto, 'docs':page_obj, 'categories': tipos, 'page_obj': page_obj, 'searchKey': searchKey})
 
 
@@ -143,11 +144,10 @@ def editUser(request, id):
     if request.user.is_superuser:
         user = User.objects.get(id=id)
         
-        
         return render(request,'core/editUser.html',{'user':user})
     
 
-def myPorfile(request):
+def myProfile(request):
     if request.method == 'POST':
         if request.POST['password1'] == request.POST['password2']:
             user = User.objects.get(id=request.user.id)
@@ -163,7 +163,7 @@ def myPorfile(request):
         else: 
             return render(
                 request,
-                'core/myPorfile.html',
+                'core/myProfile.html',
                 {
                     'form': UserCreationForm,
                     'error': 'Las contrasenias no coinciden'
@@ -173,7 +173,7 @@ def myPorfile(request):
     else:
         if request.user.is_authenticated:
             user = User.objects.get(id=request.user.id)
-            return render(request,'core/myPorfile.html',{'user':user})
+            return render(request,'core/myProfile.html',{'user':user})
         else:
             return render(request,'core/login.html',{'form': AuthenticationForm})
     

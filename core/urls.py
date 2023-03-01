@@ -29,7 +29,7 @@ urlpatterns = [
     path('users/', users, name='users'),
     path('editUser/<id>', editUser, name='editUser'),
     
-    path('myPorfile/', myPorfile, name='myPorfile'),
+    path('myProfile/', myProfile, name='myProfile'),
 
     path('Documentos/', include('Documents.urls'),name='documentos'),
     path('Usuarios/', include('users.urls', namespace='usuarios')),

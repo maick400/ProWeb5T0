@@ -6,7 +6,7 @@
   {% block content %}
 
 <div class="container">
-  <div class="row">
+  <div class="row">    
     <form action="" method="post" enctype="multipart/form-data">
 
         {% csrf_token %}
@@ -23,7 +23,7 @@
             <div class="modal-content">
                 <!-- Cabecera del modal-->
                 <div class="modal-header">
-                <h4 class="modal-title">Categorías: {{categories.tipo}}</h4>
+                <h4 class="modal-title text-al">Categorías: {{categories.tipo}}</h4>
                 <button button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <!-- Imagen -->
@@ -48,14 +48,8 @@
 
         <label for="id_descripcion">Descripción:</label>
 
-        <input
-          type="text"
-          name="descripcion"
-          class="form-control"
-          maxlength="100"
-          id="id_descripcion"
-          value = "{{categories.descripcion}}"
-        />
+        <input type="text" name="descripcion" class="form-control" maxlength="100" id="id_descripcion" 
+          value = "{{categories.descripcion}}" />
 
         <div class="col-12 text-end mt-2">
           <button type="submit" class="btn btn-success">Modificar</button>

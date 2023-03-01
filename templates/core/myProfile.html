@@ -10,10 +10,7 @@
 
         <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4">
     
-                <form class="p-5 shadow rounded-5 bg-light login-container" action="{% url 'myPorfile' %}" method="POST" class="card card-body">
-
-                    {% csrf_token %}
-
+                <form class="p-5 shadow rounded-5 bg-light login-container" action="{% url 'myProfile' %}" method="POST" class="card card-body">
                     {% csrf_token %}
 
                     <form method="POST" class="card card-body">
@@ -59,9 +56,6 @@
 
                           class="form-control" placeholder="Escriba su usuario">
                       </div>
-
-
-
       
                       <div class="mb-3">
                           <label for="password1">Contraseña</label>
@@ -85,17 +79,10 @@
 
                       </div>
                   </form>
-                 
-
-
             
-                </form>
- 
-        </div>
-    
+                </form> 
+        </div>    
     </div>
-
-    
-    
-    </div>]
+   
+</div>]
 {% endblock content %}
