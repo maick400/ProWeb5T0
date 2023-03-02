@@ -1,3 +1,4 @@
+import math
 import os
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -195,14 +196,17 @@ def get_document(request, id):
         i = 0;
         #Obtener otros documentos:
         docsAlt = Documento.objects.all().order_by("iddocumento")
-        cadena = ""
         docsAlt.aget_or_create('columnNumberAdd')
-        
+
+        fileSize = 0
+
         for doc in docsAlt:                        
             doc.columnNumber = (doc.iddocumento % 3) + i
             if(doc.portada):
-                if(os.path.exists(os.getcwd() + doc.portada.url) == False):
+                if (os.path.exists(os.getcwd() + doc.portada.url) == False):
                     doc.portada = doc.idtipodocumento.imagen
+                else:
+                    fileSize = round(os.path.getsize(os.getcwd() + registro.ruta.url) * 10**-6, 2)
             else:
                 doc.portada = doc.idtipodocumento.imagen
                
@@ -216,9 +220,8 @@ def get_document(request, id):
             columnsToAdd.append(range(2))
         else:
             columnsToAdd.append(range(1))
-            
 
-        return render(request,'documents/details_doc.html', {'registro': registro, 'atributos': atributos,'tipos': tipodoc, 'docsAlt': page_obj, 'page_obj': page_obj, 'columnsToAdd': columnsToAdd})   
+        return render(request,'documents/details_doc.html', {'fileSize': fileSize, 'registro': registro, 'atributos': atributos,'tipos': tipodoc, 'docsAlt': page_obj, 'page_obj': page_obj, 'columnsToAdd': columnsToAdd})   
       
 
 def createCategory(request):    

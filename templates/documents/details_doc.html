@@ -77,8 +77,8 @@
                     <thead>
                         <tr>
                             <th>Fichero</th>
-                            <th>Descripción</th>
-                            <th>Páginas</th>
+                            <th>Título</th>
+                            <th>Tipo de documento</th>
                             <th>Tamaño</th>
                             <th>Formato</th>
                         </tr>
@@ -87,8 +87,8 @@
                         <tr>
                             <td>{{registro.ruta.name}}</td>
                             <td>{{registro.titulo}}</td>
-                            <td>10 pag.</td>
-                            <td>2.56 MB</td>
+                            <td>{{registro.idtipodocumento.tipo}}</td>
+                            <td>{{fileSize}} MB</td>
                             <td>PDF</td>
                         </tr>
                     </tbody>

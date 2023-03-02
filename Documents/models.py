@@ -17,7 +17,7 @@ class Detalledocumento(models.Model):
     iddocumento = models.ForeignKey('Documento', models.DO_NOTHING, db_column='iddocumento', blank=True, null=True)
     atributo = models.CharField(max_length=100, blank=True, null=True)
     tipodato = models.CharField(max_length=100, blank=True, null=True)
-    valor = models.CharField(max_length=100, blank=True, null=True)
+    valor = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True
