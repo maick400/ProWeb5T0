@@ -11,10 +11,10 @@ import os
 def signin(request):
     if request.method == 'GET':
         return render(request,'core/login.html',{'form': AuthenticationForm})
-    else:
+    else:      
         user = authenticate(request, username=request.POST['username'], password=request.POST['password1'])
         if user is None:
-            return render(request,'core/login.html',{'form': AuthenticationForm,'error': 'El usuario y la contrasenia son incorrectos'})
+            return render(request,'core/login.html',{'form': AuthenticationForm,'error': 'El usuario o la contraseña ingresadas son incorrectos'})
         else:
             login(request, user)
             return redirect('home')
@@ -22,13 +22,7 @@ def signin(request):
 
 def signup (request):
     if request.method == 'GET':
-        return render(
-            request,
-            'core/signup.html',
-            {
-                'form': UserCreationForm
-            }
-        )
+        return render(request, 'core/signup.html', {'form': UserCreationForm })
               
     else:
         if request.POST['password1'] == request.POST['password2']:
@@ -90,10 +84,18 @@ def home(request):
             doc.portada = doc.idtipodocumento.imagen
             
     texto = request.GET.get('texto')
+    
+    todo_seleccionado = request.GET.get('allSelected')
 
     documentosMarcados = request.GET.getlist('activo') 
+    documentosMarcadosDos = request.GET.getlist('activo') 
+
     for tipo in tipos:
         tipo.activado = True
+
+    if (todo_seleccionado == "true"):
+            for tipo in tipos:
+                documentosMarcados.append(tipo.idtipodocumento)
 
     if documentosMarcados:
         for tipo in tipos:
@@ -122,6 +124,19 @@ def home(request):
         else:
             doc.portada = doc.idtipodocumento.imagen 
 
+
+
+    if (todo_seleccionado == "true"):
+        if documentosMarcadosDos:
+            for tipo in tipos:
+                encontrado = False
+                for idtipo in documentosMarcadosDos:
+                    if  tipo.idtipodocumento == int(idtipo):
+                        encontrado = True
+                tipo.activado = encontrado        
+    else:
+        todo_seleccionado = "false"
+
     max_elements_per_page = 6
 
     paginator = Paginator(docs, max_elements_per_page)
@@ -132,7 +147,7 @@ def home(request):
     if max_elements_per_page % 2 != 0:
         max_elements_per_page = max_elements_per_page + 2
         
-    return  render(request,'core/home.html',{'div_agregar': div_agregar, 'texto':texto, 'docs':page_obj, 'categories': tipos, 'page_obj': page_obj, 'searchKey': searchKey})
+    return  render(request,'core/home.html',{'todo_seleccionado': todo_seleccionado, 'div_agregar': div_agregar, 'texto':texto, 'docs':page_obj, 'categories': tipos, 'page_obj': page_obj, 'searchKey': searchKey})
 
 
 def users (request): 

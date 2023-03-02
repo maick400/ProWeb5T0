@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 
+
   <div class="container vh-auto">
     <div class="row justify-content-center p-3 ">
         <div class="col col-8 rounded-3 shadow bg-light border border-secondary p-4">
@@ -45,7 +46,7 @@
                             <label class="form-label fw-bold">Archivo</label>
                             <div class="row">
                                 <div class="col-8">
-                                    <input name="in_ruta" class="form-control" type="file" value="{{registro.ruta.url}}" />
+                                    <input name="in_ruta" class="form-control" accept="application/pdf" type="file" value="{{registro.ruta.url}}" />
                                 </div>
                                 <div class="col">
                                     <button name="in_ruta" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="form-control btn btn-primary" type="button" value="Abrir archivo" />
@@ -59,15 +60,24 @@
                             <label class="form-label fw-bold">Tipo de documento</label>
                             <select name="in_tipodocumento" class="form-select">
                                 {% for item in choices %}
-                                    <option value="{{item.idtipodocumento}}">{{item.tipo}}</option>
+                                    {% if item.tipo == registro.idtipodocumento.tipo %}
+                                    <option selected value="{{item.idtipodocumento}}">{{item.tipo}}</option>                                    
+                                    {% else %}
+                                        <option value="{{item.idtipodocumento}}">{{item.tipo}}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>      
                     <div class="container">
                         <label class="form-label fw-bold">Estado</label>
+                        
                         <select name="in_estado" class="form-select">
                             {% for item in estado %}
+                            {% if item == registro.estado %}
+                                <option selected value="{{item}}">{{item}}</option>
+                            {% else %}
                                 <option value="{{item}}">{{item}}</option>
+                            {% endif %}
                             {% endfor %}
                         </select>
                     </div>       

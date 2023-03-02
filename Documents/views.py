@@ -36,9 +36,17 @@ def index(request):
             
     texto = request.GET.get('texto')
 
+    todo_seleccionado = request.GET.get("allSelected")
+
     documentosMarcados = request.GET.getlist('activo') 
+    documentosMarcadosDos = request.GET.getlist('activo') 
+
     for tipo in tipos:
         tipo.activado = True
+
+    if (todo_seleccionado == "true"):
+            for tipo in tipos:
+                documentosMarcados.append(tipo.idtipodocumento)
 
     if documentosMarcados:
         for tipo in tipos:
@@ -67,6 +75,19 @@ def index(request):
         else:
             doc.portada = doc.idtipodocumento.imagen 
 
+
+
+    if (todo_seleccionado == "true"):
+        if documentosMarcadosDos:
+            for tipo in tipos:
+                encontrado = False
+                for idtipo in documentosMarcadosDos:
+                    if  tipo.idtipodocumento == int(idtipo):
+                        encontrado = True
+                tipo.activado = encontrado        
+    else:
+        todo_seleccionado = "false"
+
     max_elements_per_page = 6
 
     paginator = Paginator(docs, max_elements_per_page)
@@ -77,9 +98,7 @@ def index(request):
     if max_elements_per_page % 2 != 0:
         max_elements_per_page = max_elements_per_page + 2
         
-    div_agregar.append(range(max_elements_per_page - len(docs)))
-    
-    return  render(request,'core/home.html',{'div_agregar': div_agregar, 'texto':texto, 'docs':page_obj, 'categories': tipos, 'page_obj': page_obj, 'searchKey': searchKey})
+    return  render(request,'core/home.html',{'todo_seleccionado': todo_seleccionado, 'div_agregar': div_agregar, 'texto':texto, 'docs':page_obj, 'categories': tipos, 'page_obj': page_obj, 'searchKey': searchKey})
 
 
 @login_required
@@ -91,8 +110,6 @@ def edit(request, codigo):
     tiposAtributos = TIPOS_ATRIBUTO
 
     if request.method == 'POST':        
-        
-
         documentoEdit = Documento.objects.get(iddocumento = codigo)
         documentoEdit.titulo = request.POST["in_titulo"]
         
@@ -132,8 +149,9 @@ def edit(request, codigo):
 
         documentoEdit.save()
 
-        return redirect('../../Documentos/')        
-    else:      
+        return redirect('documentos:documentos')        
+    else:
+        
         return render(request, 'documents/edit_document.html', {'tAtributos': tiposAtributos, 'frmAtributos':frmDetalleDocumento, 'form':frmCrearCuenta, 'registro': registro, 'codigo':codigo, 'choices':choices, 'estado':estados, 'atributosDocumento':atributosDocumento})
 
 
@@ -227,6 +245,12 @@ def getCategories(request):
 
         return render(request,'documents/documentsType.html', {'categories': categories})
     
+def norevisados(request):
+    if(request.method == 'GET'):        
+        docnorevi=Documento.objects.filter(estado='No revisado')
+
+        return render(request,'documents/docs_norevisados.html', {'docsx': docnorevi})
+    
 
     
 def editCategory(request, id):   
@@ -278,7 +302,7 @@ def create(request, tipo):
             form = frmCrearCuenta(request.POST, request.FILES)
             print("asdasdsds", request.POST.get("ruta"))
             if request.POST.get("ruta") == '':
-                return redirect('../../Documentos/') 
+                return redirect('documentos:documentos') 
             if form.is_valid():  
                 form.instance.usuario = request.user
                 form.save()
@@ -301,7 +325,7 @@ def create(request, tipo):
                     detalledoc = Detalledocumento( atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = last_doc_inserted)
                     detalledoc.save();
               
-                return redirect('../../Documentos/')       
+                return redirect('documentos:documentos')       
             
             else:
                 atributosBase = Basedocumento.objects.filter(idtipodocumento=tipo)              

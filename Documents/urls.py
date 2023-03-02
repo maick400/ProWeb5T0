@@ -18,7 +18,7 @@ urlpatterns = [
      path('createCategory/', createCategory, name='createCategory'),
      path('categories/', getCategories, name='categories'),
      path('editCategoryType/<id>', editCategory, name='editCategoryType'),
-
+     path('docs_norevisados/', norevisados, name='norevisados'),
      
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

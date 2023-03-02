@@ -19,8 +19,8 @@ class frmCrearCuenta(forms.ModelForm):
             'idtipodocumento':forms.HiddenInput(),
             'titulo':forms.TextInput(attrs={ 'class':'form-control'}),
             'portada':forms.FileInput(attrs={'class':'form-control'}),
-            'ruta':forms.FileInput(attrs={'class':'form-control'}), 
-            'estado':forms.Select(choices=[('ABIERTO', 'ABIERTO'),('CERRADO', 'CERRADO')], attrs={'class':'form-select'})
+            'ruta':forms.FileInput(attrs={'class':'form-control', 'accept': 'application/pdf'}), 
+            'estado':forms.Select(choices=[('En análisis', 'En análisis'),('Aceptado', 'Aceptado'),('Rechazado', 'Rechazado'),('No revisado', 'No revisado')], attrs={'class':'form-select'})
         }
         
         

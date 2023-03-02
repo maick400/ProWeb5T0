@@ -15,8 +15,19 @@
               </button>
             </div>
             <div class="form-check form-switch mt-1" style="margin-left: 7%; margin-bottom: 5%;">
-              <li>
-                <input checked class="form-check-input" type="checkbox" role="switch" id="chk-{{cat.idtipodocumento}}">
+    
+              {{todo_seleccionado}}
+              <li>                
+                {% if todo_seleccionado is not None %}
+                  {% if todo_seleccionado == 'true' %}
+                    <input checked  name="allSelected" onchange="onChangeSelectAll(event)" value="{{todo_seleccionado}}" class="form-check-input" type="checkbox" role="switch" id="chk-{{cat.idtipodocumento}}">                  
+                  {% else %}
+                    <input  name="allSelected" onchange="onChangeSelectAll(event)" value="{{todo_seleccionado}}" class="form-check-input" type="checkbox" role="switch" id="chk-{{cat.idtipodocumento}}">
+                  {% endif %}
+                {% else %}
+                  <input checked  name="allSelected" onchange="onChangeSelectAll(event)" value="{{todo_seleccionado}}" class="form-check-input" type="checkbox" role="switch" id="chk-{{cat.idtipodocumento}}">
+                {% endif %}
+                
                 <label class="form-check-label" for="chk-{{cat.idtipodocumento}}">Todas</label>
                 <!hr class="divider">
               </li>
@@ -88,10 +99,20 @@
 
   <script>
     function onChangeSelectAll(e){
-      const toggleAll =  e.target
-      if(toggleAll.checked == true){
+      const toggleAll =  e.target;
+      //if(toggleAll.checked == true){
+        toggleAll.value = toggleAll.checked;
         
-      }
+        /*quantity = e.target.parentElement.parentElement.parentElement.children.length;
+        for(let i = 0; i < quantity; i++){
+          if(i > 2){
+            if(e.target.parentElement.parentElement.parentElement.children[i].children[0].type == "checkbox")
+            {
+              e.target.parentElement.parentElement.parentElement.children[i].children[0].checked = true;
+            }          
+          }
+        }*/
+      //}
     }    
   </script>
   {% endblock content %}

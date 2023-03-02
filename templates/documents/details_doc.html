@@ -59,7 +59,7 @@
                         </button>
                     </div>
                     <div class="col">
-                        <a type="button" class="btn btn-secondary"  href="../edit/{{registro.iddocumento}}"
+                        <a type="button" class="btn btn-secondary"  href="{% url 'documentos:edit' codigo=registro.iddocumento %} "
                              style="padding-left: 26%; padding-right: 26%; ">
                             Editar
                       </a>
@@ -206,7 +206,7 @@
         </div>
 
         <footer class="text-white" style="margin-top: 20px; background-color: rgb(1, 109, 6) ; ">
-            footer
+            Derechos reservados 2023
         </footer>
 
 

@@ -27,6 +27,10 @@
               <li><a class="dropdown-item" href="{% url 'documentos:documentos' %}">Ver mis documentos</a></li>
               <li><a class="dropdown-item" href="{% url 'documentos:chooseType' %}" >Subir documento</a></li>
               <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item center" href="{% url 'documentos:norevisados' %}" >No revisados
+                <span class="badge badge-secondary">2</span>
+              </a>
+              </li>
             </ul>
           </li>
         {% endif %}

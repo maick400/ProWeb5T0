@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+{% block title %}Documentos no revisados{% endblock title %}
+
+{% block content %} 
+<div class="container mt-2">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Titulo de documento</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in docsx %}
+      <tr>
+        <th>{{item.titulo}}</th>        
+        <td>{{item.estado}}</td>  
+        <td><a class="btn btn-primary" href="{% url 'documentos:details' id=item.iddocumento %} ">Detalle</a>
+        <a class="btn btn-primary" href="{% url 'documentos:edit' codigo=item.iddocumento %} ">Modificar</a></td>
+      </tr>      
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+{% endblock content %}
