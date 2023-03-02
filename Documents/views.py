@@ -111,8 +111,9 @@ def edit(request, codigo):
 
     if request.method == 'POST':        
         documentoEdit = Documento.objects.get(iddocumento = codigo)
-        documentoEdit.titulo = request.POST["in_titulo"]
-        
+        estadoDocumentoAnterior = documentoEdit.estado
+
+        documentoEdit.titulo = request.POST["in_titulo"]       
         if(request.POST.get("in_ruta") == ''):
             print("No Válido")
         else:
@@ -134,9 +135,14 @@ def edit(request, codigo):
         detalle_tipo_Nuevo = request.POST.getlist('tipoDatoNew')
         valor_atributos_Nuevo = request.POST.getlist('valorNew')
 
+        print("CANTIDAD = ", len(detalle_atributos))
+        
+
         for i in range (len(ids_detalles)):           
             detalleEditar = Detalledocumento(id=ids_detalles[i], atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = documentoEdit)            
+            print(detalle_atributos[i])
             ids_detallesOriginal.remove(ids_detalles[i]);
+            detalleEditar.save()
         
         for i in range (len(valor_atributos_Nuevo)):           
             detalleEditar = Detalledocumento( atributo=detalle_atributos_Nuevo[i], tipodato = detalle_tipo_Nuevo[i], valor = valor_atributos_Nuevo[i], iddocumento = documentoEdit )
@@ -145,6 +151,12 @@ def edit(request, codigo):
         for i in range  (len(ids_detallesOriginal)):
             detalleEliminar = Detalledocumento.objects.get(id = ids_detallesOriginal[i]);
             detalleEliminar.delete();
+        
+        #Verificar que quien lo revise sea un administrador o analista
+        
+        if request.POST.get("in_estado") != estadoDocumentoAnterior:            
+            if(request.user.type == 'ADM' or request.user.type == 'ANA'):
+                documentoEdit.usuarioanalista_id = request.user.id            
         
 
         documentoEdit.save()
@@ -250,8 +262,7 @@ def norevisados(request):
         docnorevi=Documento.objects.filter(estado='No revisado')
 
         return render(request,'documents/docs_norevisados.html', {'docsx': docnorevi})
-    
-
+ 
     
 def editCategory(request, id):   
     tiposAtributos = TIPOS_ATRIBUTO
@@ -268,10 +279,10 @@ def editCategory(request, id):
         tipoDatoNew = request.POST.getlist("tipoDatoNew")
 
         for i in range (len(ids_detalles)):           
-            detalleEditar = Basedocumento(atributo=detalle_atributos[i], tipodato = tipo_dato_modificado[i], idtipodocumento = categories)            
-            ids_detallesOriginal.remove(ids_detalles[i]);       
-
-
+            detalleEditar = Basedocumento(id=ids_detalles[i], tipodato = tipo_dato_modificado[i],atributo=detalle_atributos[i], idtipodocumento = categories)            
+            ids_detallesOriginal.remove(ids_detalles[i]);  
+            detalleEditar.save();
+        
         for i in range (len(tipoDatoNew)):
             detalleCrear = Basedocumento(atributo = atributosNew[i], tipodato = tipoDatoNew[i], idtipodocumento = categories)
             detalleCrear.save()
@@ -279,7 +290,7 @@ def editCategory(request, id):
         for i in range  (len(ids_detallesOriginal)):
             detalleEliminar = Basedocumento.objects.get(id = ids_detallesOriginal[i]);
             detalleEliminar.delete();
-            
+
 
         categories.descripcion = request.POST.get("descripcion")
         categories.tipo = request.POST.get("tipo")
