@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %} {% block content %}
+{% block title %}Modificar Usuario{% endblock title %}
 
 <div
   class="bg-image row d-flex justify-content-center align-items-center vh-100"
@@ -12,7 +13,7 @@
       class="card card-body"
     >
     {% csrf_token %}
-      <h1 class="text-center">Crear usuario</h1>
+      <h1 class="text-center">Modificar Usuario</h1>
 
       {{form}}
 

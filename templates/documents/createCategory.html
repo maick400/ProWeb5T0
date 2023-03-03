@@ -1,170 +1,167 @@
-{% extends "core/base.html" %}
-{% load static %}
-{% block title %}Crear categoria {% endblock title %}Crear documento
-{% block content %}
+{% extends "core/base.html" %} {% load static %} {% block title %}Crear
+categoria {% endblock title %} {% block content %}
 
-  <div class="container vh-auto">
-    <div class="row justify-content-center p-3 ">
-        <div class="col col-8 rounded-3 shadow bg-light border border-secondary ">
-            <h3 class="text-center">Crear Categoria</h3>
-            <form id="form-main" action="" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{form}}
-                <div id="atributoContenedor">
-                    <div class="container p-2 text-end">
-                        <input class="btn btn-outline-info" type="button" value = "+" onclick="clicAddAttribute()"/>
-                    </div>
-                </div>
-
-
-                <div class="col col-12 text-end p-2">
-                    <a href="../" class="btn btn-outline-secondary">Volver</a>
-                    <input  class= "btn btn-primary"  value="Guardar" data-bs-toggle="modal" data-bs-target="#exampleModal" >
-                </div>
-            </form>
-
-           
-
+<div class="container vh-auto">
+  <div class="row justify-content-center p-3">
+    <div class="col col-8 rounded-3 shadow bg-light border border-secondary">
+      <h3 class="text-center">Crear Categoria</h3>
+      <form
+        id="form-main"
+        action=""
+        method="post"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %} {{form}}
+        <div id="atributoContenedor">
+          <div class="container p-2 text-end">
+            <input
+              class="btn btn-outline-info"
+              type="button"
+              value="+"
+              onclick="clicAddAttribute()"
+            />
+          </div>
         </div>
+
+        <div class="col col-12 text-end p-2">
+          <a href="../" class="btn btn-outline-secondary">Volver</a>
+          <input
+            class="btn btn-primary"
+            value="Guardar"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          />
+        </div>
+      </form>
     </div>
-    
-    {{frmAtributos}}
-    
   </div>
 
+  {{frmAtributos}}
+</div>
 
-  <script>
-    function clicAddAttribute(){
-          // create a new div element
-       contenedor = document.getElementById("atributoContenedor");
-       
-       const newDiv = document.createElement("div");
-       newDiv.id = "atributoContenedor";
+<script>
+  function clicAddAttribute() {
+    // create a new div element
+    contenedor = document.getElementById("atributoContenedor");
 
-       const newlabel = document.createElement("label");
-       newlabel.className = "form-label";
-       newlabel.textContent = "Atributo";        
+    const newDiv = document.createElement("div");
+    newDiv.id = "atributoContenedor";
 
-       const newInput = document.createElement("input");
-       newInput.className = "form-control";
-       newInput.type="text";
-       newInput.name="atributoNew";
+    const newlabel = document.createElement("label");
+    newlabel.className = "form-label";
+    newlabel.textContent = "Atributo";
 
-       const labeltipoDato = document.createElement("label");
-       labeltipoDato.className = "form-label";
-       labeltipoDato.textContent = "Tipo de dato";        
-       
-       const inputTipoDato = document.createElement("input");
-       inputTipoDato.className = "form-control";
-       inputTipoDato.type="text";
-       inputTipoDato.name="tipoDatoNew";
+    const newInput = document.createElement("input");
+    newInput.className = "form-control";
+    newInput.type = "text";
+    newInput.name = "atributoNew";
 
-       //Tipos de datos para los inputs.
-       //selectTipoDato.className = "form-select";
-       const atributosDisponibles = document.getElementById("id_tipodato");       
-       const selectTipoDato = atributosDisponibles.cloneNode(true);
-       selectTipoDato.removeAttribute("hidden");
-       selectTipoDato.name = "tipoDatoNew";
+    const labeltipoDato = document.createElement("label");
+    labeltipoDato.className = "form-label";
+    labeltipoDato.textContent = "Tipo de dato";
 
-       /*for(let i = 0; i <= atributosDisponibles.children.length; i++){
+    const inputTipoDato = document.createElement("input");
+    inputTipoDato.className = "form-control";
+    inputTipoDato.type = "text";
+    inputTipoDato.name = "tipoDatoNew";
+
+    //Tipos de datos para los inputs.
+    //selectTipoDato.className = "form-select";
+    const atributosDisponibles = document.getElementById("id_tipodato");
+    const selectTipoDato = atributosDisponibles.cloneNode(true);
+    selectTipoDato.removeAttribute("hidden");
+    selectTipoDato.name = "tipoDatoNew";
+
+    /*for(let i = 0; i <= atributosDisponibles.children.length; i++){
            let newOption = atributosDisponibles.children[i];
            selectTipoDato.appendChild(newOption);
        }*/
 
-       const newlabelValue = document.createElement("label");
-       newlabelValue.className = "form-label";
-       newlabelValue.textContent = "Valor";   
-       newlabelValue.hidden=true;
+    const newlabelValue = document.createElement("label");
+    newlabelValue.className = "form-label";
+    newlabelValue.textContent = "Valor";
+    newlabelValue.hidden = true;
 
+    const valueInput = document.createElement("input");
+    valueInput.className = "form-control";
+    valueInput.type = "text";
+    valueInput.hidden = true;
 
-       const valueInput = document.createElement("input");
-       valueInput.className = "form-control";
-       valueInput.type= "text";
-       valueInput.hidden=true;
+    valueInput.name = "valorNew";
 
-       valueInput.name= "valorNew";
+    const divBarraNuevoAttribute = document.createElement("div");
 
-       const divBarraNuevoAttribute = document.createElement("div");
-      
-       divBarraNuevoAttribute.id = "divBarraAtributo";
+    divBarraNuevoAttribute.id = "divBarraAtributo";
 
-       const inputDeleteAttribute = document.createElement("input");
-       inputDeleteAttribute.type = "button";
-       inputDeleteAttribute.id = "deleteAttribute";
-       inputDeleteAttribute.value = " -";
-       inputDeleteAttribute.className = "btn btn-outline-info justify-content-between";
-       inputDeleteAttribute.style = "float: right";
+    const inputDeleteAttribute = document.createElement("input");
+    inputDeleteAttribute.type = "button";
+    inputDeleteAttribute.id = "deleteAttribute";
+    inputDeleteAttribute.value = " -";
+    inputDeleteAttribute.className =
+      "btn btn-outline-info justify-content-between";
+    inputDeleteAttribute.style = "float: right";
 
-       inputDeleteAttribute.onclick = ('onClick',() => deleteAttribute(event))
+    inputDeleteAttribute.onclick = ("onClick", () => deleteAttribute(event));
 
-       const minimizeAttribute  = document.createElement("input");
-       minimizeAttribute.type = "button";
-       minimizeAttribute.id = "minimizeAttribute";
-       minimizeAttribute.className = "btn btn-outline-info justify-content-between";
-       minimizeAttribute.style = "float: right";
-       minimizeAttribute.value = "^";
-       minimizeAttribute.onclick = ('onClick',() => showAndHide(event));
+    const minimizeAttribute = document.createElement("input");
+    minimizeAttribute.type = "button";
+    minimizeAttribute.id = "minimizeAttribute";
+    minimizeAttribute.className =
+      "btn btn-outline-info justify-content-between";
+    minimizeAttribute.style = "float: right";
+    minimizeAttribute.value = "^";
+    minimizeAttribute.onclick = ("onClick", () => showAndHide(event));
 
-       //contenedor.appendChild(newlabel);
-       divBarraNuevoAttribute.style.display = "block";
+    //contenedor.appendChild(newlabel);
+    divBarraNuevoAttribute.style.display = "block";
 
-       divBarraNuevoAttribute.appendChild(newlabel);
-       divBarraNuevoAttribute.appendChild(inputDeleteAttribute);
-       divBarraNuevoAttribute.appendChild(minimizeAttribute);
-       divBarraNuevoAttribute.appendChild(document.createElement("br"));
-       divBarraNuevoAttribute.appendChild(newInput);
-       
-   
-       const divContentAttribute = document.createElement("div");        
-       divContentAttribute.id = "divBarraAtributo";
-  
-       divContentAttribute.appendChild(labeltipoDato);
-       divContentAttribute.appendChild(selectTipoDato);
-       //divContentAttribute.appendChild(inputTipoDato);
-       divContentAttribute.appendChild(newlabelValue);
-       divContentAttribute.appendChild(valueInput);
-       
+    divBarraNuevoAttribute.appendChild(newlabel);
+    divBarraNuevoAttribute.appendChild(inputDeleteAttribute);
+    divBarraNuevoAttribute.appendChild(minimizeAttribute);
+    divBarraNuevoAttribute.appendChild(document.createElement("br"));
+    divBarraNuevoAttribute.appendChild(newInput);
 
-       divContentAttribute.style.visibility = "visible";
+    const divContentAttribute = document.createElement("div");
+    divContentAttribute.id = "divBarraAtributo";
 
-       newDiv.appendChild(divBarraNuevoAttribute);
-       newDiv.appendChild(divContentAttribute);
-       newDiv.style.visibility = "visible";
+    divContentAttribute.appendChild(labeltipoDato);
+    divContentAttribute.appendChild(selectTipoDato);
+    //divContentAttribute.appendChild(inputTipoDato);
+    divContentAttribute.appendChild(newlabelValue);
+    divContentAttribute.appendChild(valueInput);
 
-       contenedor.appendChild(newDiv);
+    divContentAttribute.style.visibility = "visible";
+
+    newDiv.appendChild(divBarraNuevoAttribute);
+    newDiv.appendChild(divContentAttribute);
+    newDiv.style.visibility = "visible";
+
+    contenedor.appendChild(newDiv);
+  }
+
+  function deleteAttribute(e) {
+    var buttonClicked = e.target;
+    buttonClicked.parentElement.parentElement.remove();
+  }
+
+  function showAndHide(e) {
+    var buttonClicked = e.target;
+    var divElement = buttonClicked.parentElement;
+
+    //minimizeAttribute
+    var valorelem1 = document.getElementById("minimizeAttribute");
+    if (divElement.parentElement.children[1].style.visibility == "visible") {
+      divElement.parentElement.children[1].style.visibility = "hidden";
+      divElement.parentElement.children[1].style.display = "none";
+      buttonClicked.value = "˅";
+      valorelem1.value = "˅";
+    } else {
+      divElement.parentElement.children[1].style.visibility = "visible";
+      divElement.parentElement.children[1].style.display = "block";
+      buttonClicked.value = "˄";
+      valorelem1.value = "˄";
     }
-
-    
-    
-function deleteAttribute(e){
-   var buttonClicked = e.target;
-   buttonClicked.parentElement.parentElement.remove();
-}
-
-function showAndHide(e){        
-   var buttonClicked = e.target;
-   var divElement = buttonClicked.parentElement;
-   
-   //minimizeAttribute
-   var valorelem1 = document.getElementById('minimizeAttribute');
-   if(divElement.parentElement.children[1].style.visibility == "visible"){
-       divElement.parentElement.children[1].style.visibility = "hidden";
-       divElement.parentElement.children[1].style.display = "none";
-       buttonClicked.value= '˅';
-       valorelem1.value= '˅';
-   }
-   else
-   { 
-       divElement.parentElement.children[1].style.visibility = "visible";
-       divElement.parentElement.children[1].style.display = "block";
-       buttonClicked.value= '˄';
-       valorelem1.value= '˄';
-   }  
-}
-
+  }
 </script>
 
-{% include "core/confirmationModal.html" %}
-
-{% endblock content %}
-
+{% include "core/confirmationModal.html" %} {% endblock content %}

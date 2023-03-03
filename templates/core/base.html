@@ -57,13 +57,14 @@
     
     {% include 'core/navbar.html' %}
     {% include 'core/messages.html' %}
-
-    {% block content %}
+    <div class="main">
+      {% block content %}
+      
     
-  
-    {% endblock content %}
+      {% endblock content %}
+    </div>
 
-    {% include 'core/footer.html' %}
+{% include 'core/footer.html' %}
 
  
 

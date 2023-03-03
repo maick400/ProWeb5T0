@@ -89,7 +89,7 @@ def index(request):
     else:
         todo_seleccionado = "false"
 
-    max_elements_per_page = 6
+    max_elements_per_page = 12
 
     paginator = Paginator(docs, max_elements_per_page)
     page_number = request.GET.get('page') or 1

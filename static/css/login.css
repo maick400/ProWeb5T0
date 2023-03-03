@@ -1,10 +1,24 @@
+.bg-gradient {
+
+    background: rgb(0,212,255);
+    background: radial-gradient(circle, rgba(0,212,255,1) 0%, rgba(0,208,250,1) 0%, rgba(15,10,182,1) 53%, rgba(0,0,0,1) 100%);}
+
+
+    .login-container{
+        font-weight: 200;
+    }
+
 .login-container{
-    opacity: 90%;
-    background-color: #c3ffca;
+    background-color: rgba(219, 219, 219, 0);
+    border: solid 2px;
+    color: rgb(255, 255, 255);
+
 }
 
 .login-container:hover{
-    opacity: 100%;
-    background-color: #c3ffca;
+    background-color: rgba(255, 255, 255, .70);
+    border: solid 2px;
+    color: rgb(42, 42, 42);
+
 
 }

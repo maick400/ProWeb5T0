@@ -1,4 +1,7 @@
-{% extends "core/base.html" %} {% load static %} {% block content %}
+{% extends "core/base.html" %} {% load static %}
+{% block title %}Inicio{% endblock title %}
+
+{% block content %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
@@ -11,6 +14,8 @@
           aria-label="Search"
           style="color: #280886; margin-left: 10px; font-size:30px; border: 0cap; font-weight: 600; ">
       </div>
+      {% include "documents/pagination_book.html" %}
+
       <div class=" col col-auto order-last align-items-center">
         <button class=" btn " type="submit" style=" margin-bottom: 5%;"><i class='bx bx-search'
             style='color:#3b57e8; font-size:50px ;'></i>
@@ -20,10 +25,10 @@
     </div>
 
     <div class="row ">
-      <div class="col-auto border rounded offset-3" style="margin-left: 3%; background-color: #dfd4fe;">
+      <div class="container-categories col-auto border rounded offset-3" style="margin-left: 3%; background-color: #dfd4fe;">
         <!NAV izquierdo>
         
-          <ul class="navbar-nav" style="margin-top: 10%;">
+          <ul class="navbar-nav p-3" style="margin-top: 10%;">
             <p><i class='bx bx-category' style='color:#12043e'></i> Categorias </p>
             {% csrf_token %}
 
@@ -57,7 +62,7 @@
       </div>
       <div class="col">
         <div class="container">
-          <div class="row justify-content-md-center">
+          <div class="docs-container row  justify-content-md-center">
 
             <!Desde aqui generar>
               {% for item in docs %}
@@ -109,7 +114,6 @@
       z-index: -1;
     }
   </style>
-  {% include "documents/pagination_book.html" %}
   <div style="margin-bottom: 5%;"></div>
 
  
