@@ -27,7 +27,7 @@ function clicAddAttribute(e){
     const selectTipoDato = atributosDisponibles.cloneNode(true);
     selectTipoDato.removeAttribute("hidden");
     selectTipoDato.name = "tipoDatoNew";
-    selectTipoDato.onchange = ('onchange', () => onChangeTypeData(event))
+    selectTipoDato.onchange = ('onchange', () => onChangeTypeDataDynamic(event))
 
 
     const newlabelValue = document.createElement("label");
@@ -42,6 +42,12 @@ function clicAddAttribute(e){
     const divBarraNuevoAttribute = document.createElement("div");
    
     divBarraNuevoAttribute.id = "divBarraAtributo";
+
+    const txtAreInput = document.createElement("textarea");
+    txtAreInput.className = "form-control";
+    txtAreInput.hidden = "hidden";
+    txtAreInput.name = "valorNew"
+    txtAreInput.id = "valorModificadoTextArea"
 
     const inputDeleteAttribute = document.createElement("input");
     inputDeleteAttribute.type = "button";
@@ -78,6 +84,7 @@ function clicAddAttribute(e){
     divContentAttribute.appendChild(selectTipoDato);
     divContentAttribute.appendChild(newlabelValue);
     divContentAttribute.appendChild(valueInput);
+    divContentAttribute.appendChild(txtAreInput);
 
     divContentAttribute.style.visibility = "visible";
 
@@ -123,4 +130,18 @@ function onChangeTypeData(e){
     var changeData = e.target
 
     e.target.parentElement.children[3].type = changeData.value
+}
+function onChangeTypeDataDynamic(e){
+    var changeData = e.target
+    const textAreaElement = e.target.parentElement.children[4];
+                    
+    if(changeData.options[changeData.selectedIndex].value == "textarea"){
+        textAreaElement.removeAttribute("hidden")
+        e.target.parentElement.children[3].type = "hidden"
+    }
+    else{                    
+        e.target.parentElement.children[3].type = changeData.value
+        textAreaElement.hidden = "hidden"
+    }               
+          
 }

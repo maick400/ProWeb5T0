@@ -9,7 +9,7 @@
             <br>
             <h3 class="text-center">Documento </h3>
             <br>
-            <form id="form-main" action="" method="post" enctype="multipart/form-data">
+            <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{form}}
                 <div id="atributoContenedor">
@@ -18,12 +18,16 @@
     
                         <label class="form-label" for="">{{item.atributo}} </label>
     
-    
-                        <input class="form-control"  type="{{item.tipodato}}" name="atributo" id="">
+                        {% if item.tipodato == 'textarea' %}
+                            <textarea class="form-control" name="atributo"></textarea>
+                        {% else %}
+                            <input class="form-control"  type="{{item.tipodato}}" name="atributo" id="">
+                        {% endif %}
                         <!--<div class="container p-2 text-end">
                             <input class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" value = "-" onclick="clicAddAttribute()"/>
                         </div>-->
                         <input type="hidden" name="tipoDato" value="{{item.tipodato}}">
+                        
                         <input type="hidden" name="atributoNom" value="{{item.atributo}}">
     
                     {% endfor %}
@@ -36,12 +40,9 @@
 
                 <div class="col col-12 text-end p-2">
                     <a href="../" class="btn btn-outline-secondary">Volver</a>
-                    <input  class= "btn btn-primary"  value="Guardar" data-bs-toggle="modal" data-bs-target="#exampleModal" >
+                    <input  class= "btn btn-primary" type="submit" value="Guardar">
                 </div>
             </form>
-
-           
-
         </div>
     </div>
     {{frmAtributos}}
@@ -77,6 +78,7 @@
     const selectTipoDato = atributosDisponibles.cloneNode(true);
     selectTipoDato.removeAttribute("hidden");
     selectTipoDato.name = "tipoDatoNew";
+    selectTipoDato.onchange = ('onchange', () => onChangeTypeDataDynamic(event))
 
 
     const newlabelValue = document.createElement("label");
@@ -88,6 +90,11 @@
     valueInput.type= "text";
     valueInput.name= "valorNew";
 
+    const txtAreInput = document.createElement("textarea");
+    txtAreInput.className = "form-control";
+    txtAreInput.hidden = "hidden";
+    txtAreInput.name = "valorNew"
+    txtAreInput.id = "valorModificadoTextArea"
     const divBarraNuevoAttribute = document.createElement("div");
    
     divBarraNuevoAttribute.id = "divBarraAtributo";
@@ -127,6 +134,7 @@
     divContentAttribute.appendChild(selectTipoDato);
     divContentAttribute.appendChild(newlabelValue);
     divContentAttribute.appendChild(valueInput);
+    divContentAttribute.appendChild(txtAreInput);
 
     divContentAttribute.style.visibility = "visible";
 
@@ -170,11 +178,35 @@ function showAndHide(e){
    }
   
 }
+function onChangeTypeData(e){
+    var changeData = e.target
+    const textAreaElement = document.getElementById("valorModificadoTextArea");
+                    
+    if(changeData.options[changeData.selectedIndex].value == "textarea"){
+        textAreaElement.removeAttribute("hidden")
+        e.target.parentElement.children[3].type = "hidden"
+    }
+    else{                    
+        e.target.parentElement.children[3].type = changeData.value
+        textAreaElement.hidden = "hidden"
+    }                
+}
+
+function onChangeTypeDataDynamic(e){
+    var changeData = e.target
+    const textAreaElement = e.target.parentElement.children[4];
+                    
+    if(changeData.options[changeData.selectedIndex].value == "textarea"){
+        textAreaElement.removeAttribute("hidden")
+        e.target.parentElement.children[3].type = "hidden"
+    }
+    else{                    
+        e.target.parentElement.children[3].type = changeData.value
+        textAreaElement.hidden = "hidden"
+    }                
+}
 
 </script>
-
-
-{% include "core/confirmationModal.html" %}
 
 {% endblock content %}
 

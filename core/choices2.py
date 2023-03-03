@@ -1,1 +1,1 @@
-TIPOS_ATRIBUTO = [('text', 'texto'), ('number', 'numerico'), ('date','fecha')]
+TIPOS_ATRIBUTO = [('text', 'texto'), ('number', 'numerico'), ('date','fecha'), ('textarea', 'texto extenso')]

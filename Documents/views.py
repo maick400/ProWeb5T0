@@ -103,10 +103,6 @@ def index(request):
 
 @login_required
 def edit(request, codigo):
-    
-    modal=  ["Editar documento","¿Desea guardar cambios?","Cancelar","Guardar"]
-
-    
     registro = Documento.objects.get(iddocumento = codigo)
     choices = Tipodocumento.objects.all();
     atributosDocumento = Detalledocumento.objects.filter(iddocumento = codigo);
@@ -115,49 +111,71 @@ def edit(request, codigo):
 
     if request.method == 'POST':        
         documentoEdit = Documento.objects.get(iddocumento = codigo)
-        documentoEdit.titulo = request.POST["in_titulo"]
-        
+        estadoDocumentoAnterior = documentoEdit.estado
+
+        documentoEdit.titulo = request.POST["in_titulo"]       
         if(request.POST.get("in_ruta") == ''):
             print("No Válido")
         else:
             print("Válido")
             documentoEdit.ruta = request.FILES["in_ruta"]
-        
 
         tipoDoc = Tipodocumento.objects.get(idtipodocumento=request.POST["in_tipodocumento"])
         documentoEdit.idtipodocumento = tipoDoc
         documentoEdit.estado = request.POST["in_estado"]
-
         ids_detallesOriginal = request.POST.getlist('idsDetalleOriginal')
-
         detalle_atributos = request.POST.getlist('atributoModificado')
         detalle_tipo = request.POST.getlist('tipoModificado')
+
+        valor_atributosTextArea = request.POST.getlist('valorModificadoTextArea')
+
+
         valor_atributos = request.POST.getlist('valorModificado')
+
         ids_detalles = request.POST.getlist('idsDetalle')
 
         detalle_atributos_Nuevo = request.POST.getlist('atributoNew')
         detalle_tipo_Nuevo = request.POST.getlist('tipoDatoNew')
         valor_atributos_Nuevo = request.POST.getlist('valorNew')
+        valor_atributos_NuevoTextArea = request.POST.getlist('valorNewTextArea')
 
-        for i in range (len(ids_detalles)):           
-            detalleEditar = Detalledocumento(id=ids_detalles[i], atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = documentoEdit)            
-            ids_detallesOriginal.remove(ids_detalles[i]);
         
+        for i in range (len(ids_detalles)):   
+            if (detalle_tipo[i] == 'textarea'):
+                detalleEditar = Detalledocumento(id=ids_detalles[i], atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributosTextArea[i], iddocumento = documentoEdit)            
+            else:
+                detalleEditar = Detalledocumento(id=ids_detalles[i], atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = documentoEdit)            
+
+            print(detalle_atributos[i])
+            ids_detallesOriginal.remove(ids_detalles[i]);
+            detalleEditar.save()
+        
+        print (valor_atributos_NuevoTextArea, detalle_tipo)
         for i in range (len(valor_atributos_Nuevo)):           
-            detalleEditar = Detalledocumento( atributo=detalle_atributos_Nuevo[i], tipodato = detalle_tipo_Nuevo[i], valor = valor_atributos_Nuevo[i], iddocumento = documentoEdit )
+            if(detalle_tipo_Nuevo[i] == 'textarea'):
+                detalleEditar = Detalledocumento( atributo=detalle_atributos_Nuevo[i], tipodato = detalle_tipo_Nuevo[i], valor = valor_atributos_NuevoTextArea[i], iddocumento = documentoEdit )
+            else:
+                detalleEditar = Detalledocumento( atributo=detalle_atributos_Nuevo[i], tipodato = detalle_tipo_Nuevo[i], valor = valor_atributos_Nuevo[i], iddocumento = documentoEdit )
+                
             detalleEditar.save();
 
         for i in range  (len(ids_detallesOriginal)):
             detalleEliminar = Detalledocumento.objects.get(id = ids_detallesOriginal[i]);
             detalleEliminar.delete();
         
+        #Verificar que quien lo revise sea un administrador o analista
+        
+        if request.POST.get("in_estado") != estadoDocumentoAnterior:            
+            if(request.user.type == 'ADM' or request.user.type == 'ANA'):
+                documentoEdit.usuarioanalista_id = request.user.id            
+        
 
         documentoEdit.save()
+
+        return redirect('documentos:documentos')        
+    else:
         
-        messages.add_message(request, messages.SUCCESS, 'Documento editado exitosamente')
-        return redirect( 'home')
-    else: 
-        return render(request, 'documents/edit_document.html', {'modal':modal, 'tAtributos': tiposAtributos, 'frmAtributos':frmDetalleDocumento, 'form':frmCrearCuenta, 'registro': registro, 'codigo':codigo, 'choices':choices, 'estado':estados, 'atributosDocumento':atributosDocumento})
+        return render(request, 'documents/edit_document.html', {'tAtributos': tiposAtributos, 'frmAtributos':frmDetalleDocumento, 'form':frmCrearCuenta, 'registro': registro, 'codigo':codigo, 'choices':choices, 'estado':estados, 'atributosDocumento':atributosDocumento})
 
 
 def choose_document(request):
@@ -257,11 +275,8 @@ def getCategories(request):
     
 
     
+
 def editCategory(request, id):   
-    
-    modal=  ["Editar categoría","¿Desea guardar cambios?","Cancelar","Guardar"]
-
-
     tiposAtributos = TIPOS_ATRIBUTO
     if request.method == 'POST':
         categories = Tipodocumento.objects.get(idtipodocumento = id)
@@ -276,10 +291,10 @@ def editCategory(request, id):
         tipoDatoNew = request.POST.getlist("tipoDatoNew")
 
         for i in range (len(ids_detalles)):           
-            detalleEditar = Basedocumento(id=ids_detalles[i], atributo=detalle_atributos[i], tipodato = tipo_dato_modificado[i], idtipodocumento = categories)            
-            ids_detallesOriginal.remove(ids_detalles[i]);       
-
-
+            detalleEditar = Basedocumento(id=ids_detalles[i], tipodato = tipo_dato_modificado[i],atributo=detalle_atributos[i], idtipodocumento = categories)            
+            ids_detallesOriginal.remove(ids_detalles[i]);  
+            detalleEditar.save();
+        
         for i in range (len(tipoDatoNew)):
             detalleCrear = Basedocumento(atributo = atributosNew[i], tipodato = tipoDatoNew[i], idtipodocumento = categories)
             detalleCrear.save()
@@ -287,7 +302,7 @@ def editCategory(request, id):
         for i in range  (len(ids_detallesOriginal)):
             detalleEliminar = Basedocumento.objects.get(id = ids_detallesOriginal[i]);
             detalleEliminar.delete();
-            
+
 
         categories.descripcion = request.POST.get("descripcion")
         categories.tipo = request.POST.get("tipo")
@@ -296,24 +311,23 @@ def editCategory(request, id):
             return render(request,'documents/documentsType.html', {'categories': Tipodocumento.objects.all()})    
 
         categories.imagen = request.FILES["in_ruta"]
+
         categories.save()
-        messages.add_message(request, messages.SUCCESS, 'Categoria Modificada exitosamente')
-        
-        return redirect('documentos:categories')    
+        return render(request,'documents/documentsType.html', {'categories': Tipodocumento.objects.all()})    
     else:
         categories = Tipodocumento.objects.get(idtipodocumento = id)
         detalleCategoria = Basedocumento.objects.filter(idtipodocumento = id)
-        return render(request,'documents/edit_category.html', {'modal':modal,'frmDetalleDocumento': frmDetalleDocumento, 'categories': categories, 'detallesCategoria': detalleCategoria, 'tiposAtributo': tiposAtributos})
+        return render(request,'documents/edit_category.html', {'frmDetalleDocumento': frmDetalleDocumento, 'categories': categories, 'detallesCategoria': detalleCategoria, 'tiposAtributo': tiposAtributos})
 
-def create(request, tipo): 
-    modal=  ["Subir documento","¿Desea guardar este documeto?","Cancelar","Guardar"]
- 
+
+
+def create(request, tipo):     
     if request.method == 'POST':    
         try:                       
             form = frmCrearCuenta(request.POST, request.FILES)
             print("asdasdsds", request.POST.get("ruta"))
             if request.POST.get("ruta") == '':
-                return redirect('../../Documentos/') 
+                return redirect('documentos:documentos') 
             if form.is_valid():  
                 form.instance.usuario = request.user
                 form.save()
@@ -322,33 +336,43 @@ def create(request, tipo):
                 
                 tipos = request.POST.getlist('tipoDato')
                 nom_atributos = request.POST.getlist('atributoNom')
-                valores = request.POST.getlist('atributo')    
+                valores = request.POST.getlist('atributo')  
+
+                valoresTextArea = request.POST.getlist('atributoTextArea')    
+
                 
                 detalle_atributos = request.POST.getlist('atributoNew')
                 detalle_tipo = request.POST.getlist('tipoDatoNew')
                 valor_atributos = request.POST.getlist('valorNew')
+                
+                valor_atributos_NuevoTextArea = request.POST.getlist('valorNewTextArea')
 
-                for i in range(len(tipos)):
+
+                for i in range(len(tipos)):   
                     detalledoc = Detalledocumento (atributo=nom_atributos[i], tipodato=tipos[i], valor=valores[i], iddocumento=last_doc_inserted)
+                  
                     detalledoc.save()
 
                 for i in range (len(detalle_atributos)):
-                    detalledoc = Detalledocumento( atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = last_doc_inserted)
-                    detalledoc.save();
+                    if(detalle_tipo[i] == 'textarea'):        
+                        detalledoc = Detalledocumento( atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos_NuevoTextArea[i], iddocumento = last_doc_inserted)
+                    else:
+                        detalledoc = Detalledocumento( atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = last_doc_inserted)
                     
-                messages.add_message(request, messages.SUCCESS, 'Documento creado exitosamente')              
-                return redirect('home')       
+                    detalledoc.save();
+              
+                return redirect('documentos:documentos')       
             
             else:
                 atributosBase = Basedocumento.objects.filter(idtipodocumento=tipo)              
-                return render(request,'documents/create_document.html',{'modal':modal,  'form': frmCrearCuenta, 'frmAtributos':frmDetalleDocumento, 'atributosBase': atributosBase , 'tipo': tipo})
+                return render(request,'documents/create_document.html',{'form': frmCrearCuenta, 'frmAtributos':frmDetalleDocumento, 'atributosBase': atributosBase , 'tipo': tipo})
   
         except: 
             print("ERRROR")           
             pass
     else:
         atributosBase = Basedocumento.objects.filter(idtipodocumento=tipo)
-        return render(request,'documents/create_document.html',{'modal':modal,  'form': frmCrearCuenta, 'frmAtributos':frmDetalleDocumento, 'atributosBase': atributosBase , 'tipo': tipo})
+        return render(request,'documents/create_document.html',{'form': frmCrearCuenta, 'frmAtributos':frmDetalleDocumento, 'atributosBase': atributosBase , 'tipo': tipo})
 
     
 
