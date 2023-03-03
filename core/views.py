@@ -232,17 +232,39 @@ def modifyUser(request, id):
     if request.method ==  'POST':
         frm = FrmCreateUser(request.POST)
         if frm.is_valid():
-            user = User.objects.get(id=id)
-            user.username = request.POST.get("username", "default value")
-            user.first_name = request.POST.get("first_name", "default value")
-            user.last_name = request.POST.get("last_name", "default value")
-            user.email = request.POST.get("email", "default value")
-            user.type = request.POST.get("type", "default value")
-            user.set_password(request.POST.get("password1", "default value"))
+            userActual = User.objects.get(id=id)
+
+            passwordEdit = userActual.password
+            print("NUEVA CONTRASENIA = ", request.POST.get("password"))
+            print("NUEVA CONTRASENIA = ", request.POST.get("password"))
+            print("NUEVA CONTRASENIA = ", request.POST.get("password"))
+            print("NUEVA CONTRASENIA = ", request.POST.get("password"))
+            print("NUEVA CONTRASENIA = ", request.POST.get("password"))
+
+            if (request.POST.get("password") != ''):
+                userActual.set_password(request.POST.get("password"))
+                passwordEdit= userActual.password
+
+            user = User(id = user.id, type = request.POST.get("type", userActual.type),
+                        email = request.POST.get("email", userActual.email),
+                        username=request.POST.get("username", userActual.username),
+                        first_name = request.POST.get("first_name", userActual.first_name),
+                        last_name = request.POST.get("last_name", userActual.last_name),
+                        password = passwordEdit)
+            
+
+            print(passwordEdit)
+            #user.set_password(request.POST.get("password1", "default value"))
+            #user.username = request.POST.get("username", "default value")
+            #user.first_name = request.POST.get("first_name", "default value")
+            ##user.last_name = request.POST.get("last_name", "default value")
+            #user.email = request.POST.get("email", "default value")
+            #user.type = request.POST.get("type", "default value")
+            #user.set_password(request.POST.get("password1", "default value"))
             
             user.save()
             
-            messages.add_message(request, messages.SUCCESS, 'Usuario creado correctamente')
+            messages.add_message(request, messages.SUCCESS, 'Usuario modificado correctamente')
             return redirect('home')
         else:
             return render(request,'core/modUser.html',{'form':frm, 'modal':modal ,'id':id})
