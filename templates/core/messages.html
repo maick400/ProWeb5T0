@@ -1,0 +1,21 @@
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li id="myAlert" {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+
+<script>
+    // Esperar 5 segundos (5000 milisegundos) y luego cerrar el alert
+    setTimeout(function() {
+      var myAlert = document.getElementById('myAlert');
+      var bsAlert = new bootstrap.Alert(myAlert);
+      bsAlert.close();
+    }, 3000);
+  </script>
+
+{% endif %}
+

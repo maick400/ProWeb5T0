@@ -1,0 +1,23 @@
+.confirm-modal{
+    opacity: 80%;
+    background-color: #007815;
+}
+
+.modal-header{
+    background-color: #007815;
+    color: aliceblue;
+    font-weight: 500;
+}
+
+
+
+#confirm{
+    background-color: #007815;
+
+
+}
+
+.confirm-modal:hover{
+    opacity: 100%;
+}
+

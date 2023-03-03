@@ -15,6 +15,27 @@
 
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script>
+  function mostrarPassword(){
+    var cambio = document.getElementById("password");
+    if(cambio.type == "password"){
+      cambio.type = "text";
+      $('.icon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+    }else{
+      cambio.type = "password";
+      $('.icon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+    }
+  } 
+  
+</script>
+
+
+
+
+
     <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
@@ -30,9 +51,7 @@
 </head>
 <body>
 
-    <div class="container-fluid ">
-
-       
+    
 
     <div class="bg-image row d-flex justify-content-center align-items-center vh-100" style="background-repeat:no-repeat; background-image: url('https://www.uteq.edu.ec/assets/images/advertisements/principal/img-sld-1-00002.webp'); background-position: center center;">
 
@@ -47,7 +66,8 @@
                             {% if error %}
                             <div class="alert alert-danger alert-dismissible">
                                 <button class="btn-close" data-bs-dismiss="alert" ></button>
-                                {{ error }}                        
+                                {{ error }}
+                        
                             </div>
                             {% endif %}
 
@@ -56,16 +76,20 @@
 
                            <label for="username">Usuario: </label>
                            <input type="text" name="username" id="username"
-                                  class="form-control" placeholder="Escriba su nombre de usuario"required>
+                                  class="form-control" placeholder="Escriba su nombre de usuario">
                        </div>
-            
-                       <div class="mb-3">
-                           <label for="password">Contraseña: </label>
-                           <input type="password" name="password1" id="password"
-                                  class="form-control" placeholder="Escriba su contrasena" required>
-                       </div>
+                      
+                      
 
                        
+                    <div class="mb-3">
+
+                      <div class="input-group">
+                        <input class="form-control" name="password1" type="password" id="password" />
+                       
+                        <div class="input-group-append">
+                          <button id="show_password" class="btn btn-primary" type="button" onclick="mostrarPassword()"> <span class="fa fa-eye-slash icon"></span> </button>
+                        </div>
 
                        
 
@@ -77,14 +101,14 @@
                                 Iniciar Sesion
                             </button>
                        </div>
-
-                       <div class="col-12 text-end">
+                      </div>
+                       {% comment %} <div class="col-12 text-end">
 
                         <a href="{% url 'social:begin' 'facebook' %}" class="fb btn col-12" style="background-color:#0078f4;">
                          <i class="fa fa-facebook fa-fw"></i> Iniciar sesión con Facebook
                        </a>
 
-                      </div>
+                      </div> {% endcomment %}
 
                        
             
@@ -97,6 +121,8 @@
     
     
     </div>
+
+ 
 </body>
 </html>
   {% comment %} <h2>Login</h2>

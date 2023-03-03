@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="container mt-2">
-    <a href="{% url 'documentos:createCategory'%}" class="btn btn-success">Usuarios</a>
+    <a href="{% url 'createUser' %}" class="btn btn-success">Agregar Usuario</a>
   <table class="table">
     <thead>
       <tr>
@@ -36,7 +36,7 @@
 
 
         <td>
-          <a href="{% url 'editUser' id=user.id %}" class="btn btn-warning">Modificar</a>
+          <a href="{% url 'usersModify' id=user.id %}" class="btn btn-warning">Modificar</a>
         </td>
      
       </tr>

@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-
   <div class="container vh-auto">
     <div class="row justify-content-center p-3 ">
         <div class="col col-8 rounded-3 shadow bg-light border border-secondary p-4">
@@ -34,7 +33,7 @@
 
                         
 
-            <form action="" method="post" enctype="multipart/form-data">
+            <form id="form-main" action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div id="atributoContenedor">                    
                         <div class="container">
@@ -46,7 +45,7 @@
                             <label class="form-label fw-bold">Archivo</label>
                             <div class="row">
                                 <div class="col-8">
-                                    <input name="in_ruta" class="form-control" accept="application/pdf" type="file" value="{{registro.ruta.url}}" />
+                                    <input name="in_ruta" class="form-control" type="file" value="{{registro.ruta.url}}" />
                                 </div>
                                 <div class="col">
                                     <button name="in_ruta" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="form-control btn btn-primary" type="button" value="Abrir archivo" />
@@ -60,24 +59,15 @@
                             <label class="form-label fw-bold">Tipo de documento</label>
                             <select name="in_tipodocumento" class="form-select">
                                 {% for item in choices %}
-                                    {% if item.tipo == registro.idtipodocumento.tipo %}
-                                    <option selected value="{{item.idtipodocumento}}">{{item.tipo}}</option>                                    
-                                    {% else %}
-                                        <option value="{{item.idtipodocumento}}">{{item.tipo}}</option>
-                                    {% endif %}
+                                    <option value="{{item.idtipodocumento}}">{{item.tipo}}</option>
                                 {% endfor %}
                             </select>
                         </div>      
                     <div class="container">
                         <label class="form-label fw-bold">Estado</label>
-                        
                         <select name="in_estado" class="form-select">
                             {% for item in estado %}
-                            {% if item == registro.estado %}
-                                <option selected value="{{item}}">{{item}}</option>
-                            {% else %}
                                 <option value="{{item}}">{{item}}</option>
-                            {% endif %}
                             {% endfor %}
                         </select>
                     </div>       
@@ -128,7 +118,9 @@
                     <div class = "d-flex justify-content-between container">
                         <label class="form-label fw-bold">Nuevos atributos</label>  
                         <div class="text-end">
-                            <input class="btn btn-outline-info" type="button" value = "+" onclick="clicAddAttribute(event)"/>
+                            <button class="btn btn-success" type="button" onclick="clicAddAttribute(event)"> 
+                                <img src="{% static 'assets/plus.svg' %}" alt="">
+                            </button>
                         </div>    
                     </div>
                     <br> 
@@ -142,7 +134,7 @@
 
                 <div class="col col-12 text-end p-2">
                     <a href="../" class="btn btn-outline-secondary">Volver</a>
-                    <input  class= "btn btn-primary" type="submit" value="Guardar">
+                    <input  class= "btn btn-primary" value="Guardar" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 </div>
             </form>
         </div>
@@ -163,4 +155,6 @@
         </script>
     </div>
   </div> 
+
+  {% include "core/confirmationModal.html" %}
 {% endblock content %}

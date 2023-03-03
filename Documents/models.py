@@ -17,7 +17,7 @@ class Detalledocumento(models.Model):
     iddocumento = models.ForeignKey('Documento', models.DO_NOTHING, db_column='iddocumento', blank=True, null=True)
     atributo = models.CharField(max_length=100, blank=True, null=True)
     tipodato = models.CharField(max_length=100, blank=True, null=True)
-    valor = models.TextField(blank=True, null=True)
+    valor = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         managed = True
@@ -30,10 +30,10 @@ class Documento(models.Model):
     titulo = models.CharField( max_length=100, blank=True, null=True)
     portada = models.ImageField(upload_to='documents/portadas', blank=True, null=True)
     fechasubida = models.DateTimeField(auto_now_add=True)
-    ruta = models.FileField(upload_to='documents', blank=True, null=True)    
+    ruta = models.FileField(upload_to='documents', blank=True, null=True)
+    
     publico = models.BooleanField(default=False)
-    usuario = models.ForeignKey(User, related_name='usuario', on_delete=models.CASCADE, blank=True, null=True)
-    usuarioanalista = models.ForeignKey(User,related_name='usuarioanalista', on_delete=models.CASCADE, blank=True, null=True)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
     estado = models.CharField(max_length=20, blank=True, null=True)
     

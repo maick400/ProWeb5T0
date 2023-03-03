@@ -27,12 +27,17 @@ urlpatterns = [
     path('Signup/', signup, name='signup'),
     path("Logout/",signout, name="logout"),
     path('users/', users, name='users'),
-    path('editUser/<id>', editUser, name='editUser'),
+    # path('editUser/<id>', editUser, name='editUser'),
+    
+    path('users/edit/<id>', modifyUser, name='usersModify'),
     
     path('myProfile/', myProfile, name='myProfile'),
 
     path('Documentos/', include('Documents.urls'),name='documentos'),
     path('Usuarios/', include('users.urls', namespace='usuarios')),
+    
+    path('users/create/', createUser, name='createUser'),
+
 
     
     path('oauth/', include('social_django.urls', namespace='social')),  

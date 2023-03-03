@@ -7,8 +7,7 @@
     <div class="row justify-content-center p-3 ">
         <div class="col col-8 rounded-3 shadow bg-light border border-secondary ">
             <h3 class="text-center">Crear Categoria</h3>
-         
-            <form action="" method="post" enctype="multipart/form-data">
+            <form id="form-main" action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{form}}
                 <div id="atributoContenedor">
@@ -16,9 +15,11 @@
                         <input class="btn btn-outline-info" type="button" value = "+" onclick="clicAddAttribute()"/>
                     </div>
                 </div>
+
+
                 <div class="col col-12 text-end p-2">
                     <a href="../" class="btn btn-outline-secondary">Volver</a>
-                    <input  class= "btn btn-primary" type="submit" value="Guardar">
+                    <input  class= "btn btn-primary"  value="Guardar" data-bs-toggle="modal" data-bs-target="#exampleModal" >
                 </div>
             </form>
 
@@ -162,5 +163,8 @@ function showAndHide(e){
 }
 
 </script>
+
+{% include "core/confirmationModal.html" %}
+
 {% endblock content %}
 

@@ -9,7 +9,7 @@
             <br>
             <h3 class="text-center">Documento </h3>
             <br>
-            <form action="" method="post" enctype="multipart/form-data">
+            <form id="form-main" action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{form}}
                 <div id="atributoContenedor">
@@ -36,9 +36,12 @@
 
                 <div class="col col-12 text-end p-2">
                     <a href="../" class="btn btn-outline-secondary">Volver</a>
-                    <input  class= "btn btn-primary" type="submit" value="Guardar">
+                    <input  class= "btn btn-primary"  value="Guardar" data-bs-toggle="modal" data-bs-target="#exampleModal" >
                 </div>
             </form>
+
+           
+
         </div>
     </div>
     {{frmAtributos}}
@@ -74,7 +77,7 @@
     const selectTipoDato = atributosDisponibles.cloneNode(true);
     selectTipoDato.removeAttribute("hidden");
     selectTipoDato.name = "tipoDatoNew";
-    selectTipoDato.onchange = ('onChange',() => onChangeTypeData(event))
+
 
     const newlabelValue = document.createElement("label");
     newlabelValue.className = "form-label fw-bold";
@@ -167,12 +170,11 @@ function showAndHide(e){
    }
   
 }
-function onChangeTypeData(e){
-    var changeData = e.target
-    alert("")
-    e.target.parentElement.children[3].type = changeData.value
-}
+
 </script>
+
+
+{% include "core/confirmationModal.html" %}
 
 {% endblock content %}
 

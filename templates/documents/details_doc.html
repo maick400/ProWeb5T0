@@ -6,7 +6,7 @@
 <form action="#" class="border p-4 form">
     <div class="container" style="margin-top: 1%;">
         <div class="form-group">
-            <label style="margin-top: 2%; font-size: 40px; font-weight: 800;"> {{registro.titulo}}</label>
+            <label style="margin-top: 2%; font-size: 40px; font-weight: 800; color: #1b8301;"> {{registro.titulo}}</label>
         </div>
         <div class="row ">
             <div class="col order-last col-sm-7" style=" margin-top: 1%;">
@@ -33,39 +33,40 @@
             </div>
             <div class="col order-first col-sm-4" style="margin-bottom: 3%; margin-right: 2%;">
                 <!Portada>
-                    <div class="containerima"
-                    style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;" aria-hidden="true">
-                        <img width="100%" height="100%"
-                            src="{{registro.portada.url}}">
+                    <div class="containerima1"
+                        style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;" aria-hidden="true">
+                        <img width="100%" height="100%" src="{{registro.portada.url}}">
                         <div class="content">
                         </div>
                     </div>
             </div>
         </div>
         <!botones para ver el documento>
-            <div class="container text-center" style="margin-top: 2%;">
-                <div class="row justify-content-md-center">
-                    <div class="col align-items-center">
-                        <!COLUMA 1 PARA EL BOTON   ">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#staticBackdrop" style="padding-left: 30%; padding-right: 30%; ">
-                                Ver
-                            </button>
-                    </div>
-                    <div class="col">
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop" style="padding-left: 26%; padding-right: 26%; ">
-                            Descargar
+        <div class="container text-center" style="margin-top: 2%;">
+            <div class="row justify-content-md-center">
+                <div class="col align-items-center">
+                    <!COLUMA 1 PARA EL BOTON   ">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop" style="padding-left: 30%; padding-right: 30%; ">
+                            Ver
                         </button>
-                    </div>
-                    <div class="col">
-                        <a type="button" class="btn btn-secondary"  href="{% url 'documentos:edit' codigo=registro.iddocumento %} "
-                             style="padding-left: 26%; padding-right: 26%; ">
-                            Editar
-                      </a>
-                    </div>
                 </div>
+                <div class="col">
+                    <a download class="btn btn-danger" href="{{registro.ruta.url}}" style="padding-left: 26%; padding-right: 26%; ">
+                        Descargar
+                </a>
+                </div>
+                {% if user.id == registro.usuario.id or user.type == 'ADM' or user.type == 'MOD' %}
+
+                <div class="col">
+                    <a type="button" class="btn btn-secondary"  href="../edit/{{registro.iddocumento}}"
+                        style="padding-left: 26%; padding-right: 26%; ">
+                        Editar
+                </a>
+                </div>
+                {% endif %}
             </div>
+        </div>
     </div>
 </form>
 
@@ -110,9 +111,7 @@
 
                 <!-- Pdf -->
                 <div class="modal-body">
-                    <iframe
-                        src="{{registro.ruta.url}}"
-                        width="100%" height="500px" id="myframe"></iframe>
+                    <iframe src="{{registro.ruta.url}}" width="100%" height="500px" id="myframe"></iframe>
                 </div>
 
             </div>
@@ -122,93 +121,98 @@
 </div><!-- Model End   -->
 
 <!RELACIONADOS>
-    <div class="container">
-        <div class="row align-items-center">
-
-            <div class="col align-items-center">
-                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                    <div class="col order-last">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <!Los activos>
-                                    <div class="row">
-                                        {% for item in docsAlt %}
-                                        <div class="col order-last">
-                                            <!Libro 1>
-                                                <div class="containerima"
-                                                    style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
-                                                    aria-hidden="true">
-                                                    <img width="100%" height="100%"
-                                                        src="{{item.portada.url}}">
-                                                    <div class="content">
-                                                        <p>
-                                                            <a class="titulos-libros" href="../details/{{item.iddocumento}}"
-                                                                style=" color: #dfdfdf;  font-size: 20px; font-weight: 900; ">
-                                                                {{item.titulo}}
-                                                            </a>
-                                                        </p>
-                                                    </div>
-                                                </div>
-
+    <div class="container border rounded" style="background-color: #1b8301; margin-top: 3%;" >
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active text-center">
+                        <!Los activos>
+                        <label style="margin-top: 2%; font-size: 30px; font-weight: 600; color: #e6e6e6;"> Contenido Relacionado</label>
+                            <div class="row">
+                                {% for item in docsAlt %}
+                                <div class="col" style="display: flex;
+                                align-items: center;
+                                justify-content: center;">
+                                    <!Libro 1>
+                                        <div class="containerima"
+                                            style="max-width: 300px; max-height: 375px; position: relative; margin-top: 4%; margin-bottom: 4%;"
+                                            aria-hidden="true">
+                                            <img width="100%"  src="{{item.portada.url}}" style="max-height: 375px; ">
+                                            <div class="content">
+                                                <p>
+                                                    <a class="titulos-libros" href="../details/{{item.iddocumento}}"
+                                                        style=" color: #dfdfdf;  font-size: 20px; font-weight: 900; ">
+                                                        {{item.titulo}}
+                                                    </a>
+                                                </p>
+                                            </div>
                                         </div>
-                                       
-                                        {% endfor %}
 
-                                        {% for i in  columnsToAdd %}    
-                                        {% for j in i %} 
-                                        {% if page_obj.number ==  page_obj.paginator.num_pages %}                                     
-                                        <div class="col order-last">
-                                            <!Libro 1>
-                                                <div class="containerima"
-                                                    style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
-                                                    aria-hidden="true">
-                                                </div>                                                    
-                                        </div>     
-                                        {% endif %}                                            
-                                        {% endfor %}  
-                                        {% endfor %}      
-                                    </div>
-                                    <!Los activos>
+                                </div>
+
+                                {% endfor %}
+
+                                {% for i in columnsToAdd %}
+                                {% for j in i %}
+                                {% if page_obj.number == page_obj.paginator.num_pages %}
+                                <div class="col order-last">
+                                    <!Libro 1>
+                                        <div class="containerima"
+                                            style="max-width: 100%; max-height:100%;position: relative; margin-top: 4%;"
+                                            aria-hidden="true">
+                                        </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                                {% endfor %}
                             </div>
-                           
-                        </div>
+                            <!Los activos>
                     </div>
-                </div>
-            </div>
 
+                </div>
         </div>
     </div>
     <!botones del carrusel>
-        <div class="container" style="margin-top: 2%;">
+        <div class="container" style="margin-top: 2%; margin-bottom: 5%;">
             <div class="row justify-content-md-center">
                 <div class="col">
                     <!COLUMA 1 PARA EL BOTON>
-                    {% if page_obj.number > 1 %}
-                        <a class="btn btn-warning"  data-bs-target="#carouselExampleControls"
-                             href="?page={{ page_obj.previous_page_number }}" data-slide="prev" style="padding-left: 16%; padding-right: 16%;">
-                         <   </a>
-                    {% endif %}
+                        {% if page_obj.number > 1 %}
+                        <a class="btn btn-primary" data-bs-target="#carouselExampleControls"
+                            href="?page={{ page_obj.previous_page_number }}" data-slide="prev"
+                            style="padding-left: 16%; padding-right: 16%;">
+                            < </a>
+                                {% endif %}
                 </div>
                 <div class="col">
                     <h5 style="text-align: center;">Páginas: {{page_obj.number}}</h5>
                 </div>
                 <div class="col">
-                    {% if page_obj.number < page_obj.next_page_number %}
-                    <!COLUMA 1 PARA EL BOTON>
-                        <a data-toggle="carousel-control-next" class="clickLink btn btn-warning"
+                    {% if page_obj.number < page_obj.next_page_number %} <!COLUMA 1 PARA EL BOTON>
+                        <a data-toggle="carousel-control-next" class="clickLink btn btn-primary"
                             href="?page={{ page_obj.next_page_number }}" data-slide="next"
                             style="padding-left: 16%; padding-right: 16%; margin-left: 66%;">
                             >
                         </a>
-                    {% endif %}
+                        {% endif %}
                 </div>
             </div>
         </div>
 
-        <footer class="text-white" style="margin-top: 20px; background-color: rgb(1, 109, 6) ; ">
-            Derechos reservados 2023
-        </footer>
+        <style>
+            .containerima1::after{
+              position: absolute;
+              top: 0px;
+              left: 0px;
+              content: '';
+              background-image: linear-gradient(#33ccff,#0c1438);
+              width: 100%;
+              height: 100%;
+              filter: blur(10px);
+              z-index: -1;
+            }
+            </style>
 
 
 
+       
         {% endblock content %}

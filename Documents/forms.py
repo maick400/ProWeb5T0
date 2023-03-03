@@ -2,7 +2,7 @@ from django import forms
 from django.forms.models import inlineformset_factory
 from .models import *
 from core.choices2 import *
-
+from core.CHOICES import *
 class frmCrearCuenta(forms.ModelForm):
     class Meta:
         model = Documento
@@ -20,7 +20,7 @@ class frmCrearCuenta(forms.ModelForm):
             'titulo':forms.TextInput(attrs={ 'class':'form-control'}),
             'portada':forms.FileInput(attrs={'class':'form-control'}),
             'ruta':forms.FileInput(attrs={'class':'form-control', 'accept': 'application/pdf'}), 
-            'estado':forms.Select(choices=[('En análisis', 'En análisis'),('Aceptado', 'Aceptado'),('Rechazado', 'Rechazado'),('No revisado', 'No revisado')], attrs={'class':'form-select'})
+            'estado':forms.Select(choices=ESTADOS,  attrs={'class':'form-select' , 'disabled': 'true'})
         }
         
         
@@ -32,7 +32,7 @@ class frmDetalleDocumento(forms.ModelForm):
            'tipodato': ''
         }
         widgets = {
-            'tipodato':forms.Select(choices=TIPOS_ATRIBUTO, attrs={'class':'form-select', 'hidden': 'hidden'})
+            'tipodato':forms.Select(choices=TIPOS_ATRIBUTO, attrs={'class':'form-select', 'hidden': 'hidden', })
         }
         
         

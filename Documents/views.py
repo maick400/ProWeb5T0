@@ -1,4 +1,3 @@
-import math
 import os
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -14,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from core.choices2 import *
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 # from ..core import settings
 
@@ -98,12 +98,15 @@ def index(request):
     div_agregar= []
     if max_elements_per_page % 2 != 0:
         max_elements_per_page = max_elements_per_page + 2
-        
+    div_agregar.append(range(max_elements_per_page-len(docs)))
     return  render(request,'core/home.html',{'todo_seleccionado': todo_seleccionado, 'div_agregar': div_agregar, 'texto':texto, 'docs':page_obj, 'categories': tipos, 'page_obj': page_obj, 'searchKey': searchKey})
-
 
 @login_required
 def edit(request, codigo):
+    
+    modal=  ["Editar documento","¿Desea guardar cambios?","Cancelar","Guardar"]
+
+    
     registro = Documento.objects.get(iddocumento = codigo)
     choices = Tipodocumento.objects.all();
     atributosDocumento = Detalledocumento.objects.filter(iddocumento = codigo);
@@ -112,14 +115,14 @@ def edit(request, codigo):
 
     if request.method == 'POST':        
         documentoEdit = Documento.objects.get(iddocumento = codigo)
-        estadoDocumentoAnterior = documentoEdit.estado
-
-        documentoEdit.titulo = request.POST["in_titulo"]       
+        documentoEdit.titulo = request.POST["in_titulo"]
+        
         if(request.POST.get("in_ruta") == ''):
             print("No Válido")
         else:
             print("Válido")
             documentoEdit.ruta = request.FILES["in_ruta"]
+        
 
         tipoDoc = Tipodocumento.objects.get(idtipodocumento=request.POST["in_tipodocumento"])
         documentoEdit.idtipodocumento = tipoDoc
@@ -136,14 +139,9 @@ def edit(request, codigo):
         detalle_tipo_Nuevo = request.POST.getlist('tipoDatoNew')
         valor_atributos_Nuevo = request.POST.getlist('valorNew')
 
-        print("CANTIDAD = ", len(detalle_atributos))
-        
-
         for i in range (len(ids_detalles)):           
             detalleEditar = Detalledocumento(id=ids_detalles[i], atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = documentoEdit)            
-            print(detalle_atributos[i])
             ids_detallesOriginal.remove(ids_detalles[i]);
-            detalleEditar.save()
         
         for i in range (len(valor_atributos_Nuevo)):           
             detalleEditar = Detalledocumento( atributo=detalle_atributos_Nuevo[i], tipodato = detalle_tipo_Nuevo[i], valor = valor_atributos_Nuevo[i], iddocumento = documentoEdit )
@@ -153,19 +151,13 @@ def edit(request, codigo):
             detalleEliminar = Detalledocumento.objects.get(id = ids_detallesOriginal[i]);
             detalleEliminar.delete();
         
-        #Verificar que quien lo revise sea un administrador o analista
-        
-        if request.POST.get("in_estado") != estadoDocumentoAnterior:            
-            if(request.user.type == 'ADM' or request.user.type == 'ANA'):
-                documentoEdit.usuarioanalista_id = request.user.id            
-        
 
         documentoEdit.save()
-
-        return redirect('documentos:documentos')        
-    else:
         
-        return render(request, 'documents/edit_document.html', {'tAtributos': tiposAtributos, 'frmAtributos':frmDetalleDocumento, 'form':frmCrearCuenta, 'registro': registro, 'codigo':codigo, 'choices':choices, 'estado':estados, 'atributosDocumento':atributosDocumento})
+        messages.add_message(request, messages.SUCCESS, 'Documento editado exitosamente')
+        return redirect( 'home')
+    else: 
+        return render(request, 'documents/edit_document.html', {'modal':modal, 'tAtributos': tiposAtributos, 'frmAtributos':frmDetalleDocumento, 'form':frmCrearCuenta, 'registro': registro, 'codigo':codigo, 'choices':choices, 'estado':estados, 'atributosDocumento':atributosDocumento})
 
 
 def choose_document(request):
@@ -225,12 +217,15 @@ def get_document(request, id):
       
 
 def createCategory(request):    
+    modal=  ["Editar documento","¿Desea guardar cambios?","Cancelar","Guardar"]
+
     if request.method == 'POST':
         frm = frmCrearCategoria(request.POST, request.FILES)
         
         if frm.is_valid():
             frm.save()
-            
+            messages.add_message(request, messages.SUCCESS, 'Categoria creada exitosamente')
+
             last_cat = Tipodocumento.objects.last()
             
             detalle_atributos_Nuevo = request.POST.getlist('atributoNew')
@@ -241,16 +236,16 @@ def createCategory(request):
                 base_doc = Basedocumento(idtipodocumento = last_cat, atributo = detalle_atributos_Nuevo[i], tipodato = detalle_tipo_Nuevo[i])
                 base_doc.save()
             frm.save()
-            return redirect('documentos:documentos')
+            return redirect('documentos:categories')
         else :            
-            return render(request, 'documents/createCategory.html', {'form':frm})
+            return render(request, 'documents/createCategory.html', {'modal':modal, 'tAtributos': tiposAtributos, 'frmAtributos':frmDetalleDocumento, 'form':frm})
 
         
         
     else:
         frm = frmCrearCategoria
         tiposAtributos = TIPOS_ATRIBUTO
-        return render(request, 'documents/createCategory.html', {'tAtributos': tiposAtributos, 'frmAtributos':frmDetalleDocumento, 'form':frm})
+        return render(request, 'documents/createCategory.html', {'modal':modal, 'tAtributos': tiposAtributos, 'frmAtributos':frmDetalleDocumento, 'form':frm})
 
         # return render(request, 'documents/createCategory.html', {'form':frm})
     
@@ -260,14 +255,13 @@ def getCategories(request):
 
         return render(request,'documents/documentsType.html', {'categories': categories})
     
-def norevisados(request):
-    if(request.method == 'GET'):        
-        docnorevi=Documento.objects.filter(estado='No revisado')
 
-        return render(request,'documents/docs_norevisados.html', {'docsx': docnorevi})
- 
     
 def editCategory(request, id):   
+    
+    modal=  ["Editar categoría","¿Desea guardar cambios?","Cancelar","Guardar"]
+
+
     tiposAtributos = TIPOS_ATRIBUTO
     if request.method == 'POST':
         categories = Tipodocumento.objects.get(idtipodocumento = id)
@@ -282,10 +276,10 @@ def editCategory(request, id):
         tipoDatoNew = request.POST.getlist("tipoDatoNew")
 
         for i in range (len(ids_detalles)):           
-            detalleEditar = Basedocumento(id=ids_detalles[i], tipodato = tipo_dato_modificado[i],atributo=detalle_atributos[i], idtipodocumento = categories)            
-            ids_detallesOriginal.remove(ids_detalles[i]);  
-            detalleEditar.save();
-        
+            detalleEditar = Basedocumento(id=ids_detalles[i], atributo=detalle_atributos[i], tipodato = tipo_dato_modificado[i], idtipodocumento = categories)            
+            ids_detallesOriginal.remove(ids_detalles[i]);       
+
+
         for i in range (len(tipoDatoNew)):
             detalleCrear = Basedocumento(atributo = atributosNew[i], tipodato = tipoDatoNew[i], idtipodocumento = categories)
             detalleCrear.save()
@@ -293,7 +287,7 @@ def editCategory(request, id):
         for i in range  (len(ids_detallesOriginal)):
             detalleEliminar = Basedocumento.objects.get(id = ids_detallesOriginal[i]);
             detalleEliminar.delete();
-
+            
 
         categories.descripcion = request.POST.get("descripcion")
         categories.tipo = request.POST.get("tipo")
@@ -302,21 +296,24 @@ def editCategory(request, id):
             return render(request,'documents/documentsType.html', {'categories': Tipodocumento.objects.all()})    
 
         categories.imagen = request.FILES["in_ruta"]
-
         categories.save()
-        return render(request,'documents/documentsType.html', {'categories': Tipodocumento.objects.all()})    
+        messages.add_message(request, messages.SUCCESS, 'Categoria Modificada exitosamente')
+        
+        return redirect('documentos:categories')    
     else:
         categories = Tipodocumento.objects.get(idtipodocumento = id)
         detalleCategoria = Basedocumento.objects.filter(idtipodocumento = id)
-        return render(request,'documents/edit_category.html', {'frmDetalleDocumento': frmDetalleDocumento, 'categories': categories, 'detallesCategoria': detalleCategoria, 'tiposAtributo': tiposAtributos})
+        return render(request,'documents/edit_category.html', {'modal':modal,'frmDetalleDocumento': frmDetalleDocumento, 'categories': categories, 'detallesCategoria': detalleCategoria, 'tiposAtributo': tiposAtributos})
 
-def create(request, tipo):     
+def create(request, tipo): 
+    modal=  ["Subir documento","¿Desea guardar este documeto?","Cancelar","Guardar"]
+ 
     if request.method == 'POST':    
         try:                       
             form = frmCrearCuenta(request.POST, request.FILES)
             print("asdasdsds", request.POST.get("ruta"))
             if request.POST.get("ruta") == '':
-                return redirect('documentos:documentos') 
+                return redirect('../../Documentos/') 
             if form.is_valid():  
                 form.instance.usuario = request.user
                 form.save()
@@ -338,19 +335,20 @@ def create(request, tipo):
                 for i in range (len(detalle_atributos)):
                     detalledoc = Detalledocumento( atributo=detalle_atributos[i], tipodato = detalle_tipo[i], valor = valor_atributos[i], iddocumento = last_doc_inserted)
                     detalledoc.save();
-              
-                return redirect('documentos:documentos')       
+                    
+                messages.add_message(request, messages.SUCCESS, 'Documento creado exitosamente')              
+                return redirect('home')       
             
             else:
                 atributosBase = Basedocumento.objects.filter(idtipodocumento=tipo)              
-                return render(request,'documents/create_document.html',{'form': frmCrearCuenta, 'frmAtributos':frmDetalleDocumento, 'atributosBase': atributosBase , 'tipo': tipo})
+                return render(request,'documents/create_document.html',{'modal':modal,  'form': frmCrearCuenta, 'frmAtributos':frmDetalleDocumento, 'atributosBase': atributosBase , 'tipo': tipo})
   
         except: 
             print("ERRROR")           
             pass
     else:
         atributosBase = Basedocumento.objects.filter(idtipodocumento=tipo)
-        return render(request,'documents/create_document.html',{'form': frmCrearCuenta, 'frmAtributos':frmDetalleDocumento, 'atributosBase': atributosBase , 'tipo': tipo})
+        return render(request,'documents/create_document.html',{'modal':modal,  'form': frmCrearCuenta, 'frmAtributos':frmDetalleDocumento, 'atributosBase': atributosBase , 'tipo': tipo})
 
     
 
